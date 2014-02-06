@@ -4,7 +4,8 @@ from django.db import models
 
 class Player(models.Model):
     name = models.CharField(max_length=100)
-    score = models.FloatField()
+    score = models.IntegerField()
+    live_score = models.IntegerField()
     favorite_color = models.IntegerField()
     def __unicode__(self):
     	return self.name
@@ -13,7 +14,8 @@ class Game(models.Model):
     winner = models.ForeignKey(Player, related_name="won_games")
     loser = models.ForeignKey(Player, related_name="lost_games")
     datetime = models.DateTimeField(auto_now=True)
-    under_table = models.BooleanField()
+    under_table = models.BooleanField(default=False)
+    notes = models.TextField(blank=True)
     def __unicode__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
 
