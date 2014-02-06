@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save
 
 # Create your models here.
 
@@ -9,7 +10,7 @@ class Player(models.Model):
     favorite_color = models.IntegerField()
     def __unicode__(self):
     	return self.name
-    def calculate_rating(self, opponent_rating, result)
+    def calculate_rating(self, opponent_rating, result):
         change = result * (self.live_rating / opponent_rating) * 10
         self.live_rating = self.live_rating + change
         return change 
@@ -22,11 +23,8 @@ class Game(models.Model):
     notes = models.TextField(blank=True)
     def __unicode__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
-    def calculate_ratings(self)
+    def calculate_ratings(self, instance, **kwargs):
         winner_rating = winner.live_rating
         winner.calculate_rating(opponent.live_rating, 1)
         loser.calculate_rating(winner_rating, -1)
     post_save.connect(calculate_ratings)
-        
-
-    
