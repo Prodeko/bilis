@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<html lang="fi">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <script src="{% static "js/bootstrap.js" %}"></script>
+        <title>{% block title %}Biliskilke{% endblock %}</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                        <span class="sr-only">Navigoi</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Bilis on paras :D:DDD</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">sitä</a></li>
+                        <li><a href="#">tätä</a></li>
+                        <li><a href="#">tota</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        
+        <div class="container-fluid" id="content">
+            {% block body %}
+                <p>Ime parsaa</p>
+            {% endblock %}
+        </div>
+    </body>
+</html>
+
