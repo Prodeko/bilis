@@ -7,9 +7,13 @@ class Player(models.Model):
     name = models.CharField(max_length=100)
     rating = models.IntegerField()
     live_rating = models.IntegerField()
-    favorite_color = models.IntegerField()
+    favorite_color = models.IntegerField(default=16711680)
     def __unicode__(self):
     	return self.name
+    def save(self, *args, **kwargs):
+        self.rating = 1000
+        self.live_rating = 1000
+        super(Player, self).save(*args, **kwargs)
     def calculate_rating(self, opponent_rating, result):
         change = result * (self.live_rating / opponent_rating) * 10
         self.live_rating = self.live_rating + change
@@ -27,4 +31,3 @@ class Game(models.Model):
         winner_rating = winner.live_rating
         winner.calculate_rating(opponent.live_rating, 1)
         loser.calculate_rating(winner_rating, -1)
-    post_save.connect(calculate_ratings)
