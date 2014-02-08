@@ -8,4 +8,5 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
+    url(r'^add/', views.add_player, name='add'),
 )+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
