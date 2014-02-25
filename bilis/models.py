@@ -27,7 +27,7 @@ class Game(models.Model):
     notes = models.TextField(blank=True)
     def __unicode__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
-    def calculate_ratings(self, instance, **kwargs):
-        winner_rating = winner.live_rating
-        winner.calculate_rating(opponent.live_rating, 1)
-        loser.calculate_rating(winner_rating, -1)
+    def save(self, *args, **kwargs):
+        self.winner.calculate_rating(self.loser.live_rating, 1)
+        self.loser.calculate_rating(self.winner.rating, -1)
+        super(Game, self).save(*args, **kwargs)
