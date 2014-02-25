@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Lisää pelaaja{% endblock %}
+
+{% block body %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nimi</th>
+                <th>Pisteet</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ player.name }}</td>
+                <td>{{ player.rating }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
