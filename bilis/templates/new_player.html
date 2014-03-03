@@ -3,7 +3,7 @@
 {% block title %}Lisää pelaaja{% endblock %}
 
 {% block body %}
-<form action="/add/" method="post">
+<form action="/new/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Luo" />
