@@ -1,6 +1,6 @@
+from __future__ import division
 from django.db import models
 from django.db.models.signals import post_save
-
 # Create your models here.
 
 class Player(models.Model):
@@ -11,12 +11,14 @@ class Player(models.Model):
     def __unicode__(self):
     	return self.name
     def save(self, *args, **kwargs):
-        self.rating = 1000
-        self.live_rating = 1000
+        if self.pk is None:
+            self.rating = 1000
+            self.live_rating = 1000
         super(Player, self).save(*args, **kwargs)
-    def calculate_rating(self, opponent_rating, result):
+    def update_rating(self, opponent_rating, result):
         change = result * (self.live_rating / opponent_rating) * 10
         self.live_rating = self.live_rating + change
+        self.save()
         return change 
 
 class Game(models.Model):
@@ -28,6 +30,6 @@ class Game(models.Model):
     def __unicode__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
     def save(self, *args, **kwargs):
-        self.winner.calculate_rating(self.loser.live_rating, 1)
-        self.loser.calculate_rating(self.winner.rating, -1)
+        self.winner.update_rating(self.loser.live_rating, 1)
+        self.loser.update_rating(self.winner.live_rating, -1)
         super(Game, self).save(*args, **kwargs)

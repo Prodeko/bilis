@@ -2,22 +2,53 @@
 
 
 {% block body %}
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nimi</th>
-                <th>Pisteet</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for player in players %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ player.name }}</td>
-                <td>{{ player.rating }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+    <form action="{% url 'add' %}" method="post">
+    <div class="row">
+        <div class="col-sm-1 col-sm-offset-5">
+            <div class="input-group">
+                <span class="input-group-addon">Voittaja</span>
+                {{ form.winner }}
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="input-group">
+                {{ form.loser }}
+                <span class="input-group-addon">Häviäjä</span>
+            </div>
+        {% csrf_token %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-5">
+            <div class="form-controls">
+                <div class="btn-group btn-group-justified">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-lg">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nimi</th>
+                    <th>Pisteet</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.live_rating }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
