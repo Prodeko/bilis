@@ -6,7 +6,7 @@ from bilis.forms import PlayerForm, ResultForm
 
 def index(request):
     form = ResultForm()
-    players = Player.objects.all().order_by('rating')
+    players = Player.objects.all().order_by('live_rating')
     return render_to_response('index.html',{
                 'form': form,
                 'players': players
