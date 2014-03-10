@@ -9,6 +9,9 @@ class PlayerForm(ModelForm):
         labels = {
             'name': _('Nimi'),
         }
+        widgets = {
+            'name': TextInput(attrs={'class': u'form-control'})
+        }
 class ResultForm(ModelForm):
     class Meta:
         model = Game
