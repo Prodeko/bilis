@@ -3,9 +3,18 @@
 {% block title %}Lisää pelaaja{% endblock %}
 
 {% block body %}
-<form action="/new/" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Luo" />
-</form>
+
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+	    <form action="/new/" method="post" class="form-horizontal" role="form">
+	        {% csrf_token %}
+	        <div class="form-group">
+                {{ form.as_p }}
+		  	</div>
+		    <input type="submit" value="Luo" />
+		</form>
+	</div>
+</div>
+
+
 {% endblock %}
