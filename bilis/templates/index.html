@@ -33,11 +33,12 @@
     </div>
     </form>
     <div class="row">
-    	<div class="col-xs-12">
+    	<div class="col-sm-6 col-md-4 col-md-offset-2">
+                <h1>Top 20</h1>
     		<table class="table table-bordered">
 	            <thead>
 	                <tr>
-	                    <th>#</th>
+	                    <th>Sijoitus</th>
 	                    <th>Nimi</th>
 	                    <th>Pisteet</th>
 	                </tr>
@@ -53,5 +54,27 @@
 	            </tbody>
 	        </table>
     	</div>
+    	<div class="col-sm-6 col-md-4">
+            <h1>Viimeisimmät pelit</h1>
+            <table class="table table-bordered">
+	            <thead>
+	                <tr>
+	                    <th>Aika</th>
+	                    <th>Voittaja</th>
+	                    <th>Häviäjä</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                {% for game in latest_games %}
+	                <tr>
+                            <td>{{ game.datetime | date:"h.i"  }}</td>
+	                    <td>{{ game.winner.name }}</td>
+	                    <td>{{ game.loser.name }}</td>
+	                </tr>
+	                {% endfor %}
+	            </tbody>
+	        </table>
+    	</div>
+
     </div>
 {% endblock %}
