@@ -12,11 +12,18 @@ class PlayerForm(ModelForm):
         widgets = {
             'name': TextInput(attrs={'class': u'form-control'})
         }
+
+
 class ResultForm(ModelForm):
     class Meta:
         model = Game
-        fields = ['winner', 'loser']
+        fields = ['winner', 'loser', 'under_table']
+        labels = {
+            'winner': _('Voittaja'),
+            'loser': _('Häviäjä'),
+            'under_table': _('Pöydän alle'),
+        }
         widgets = {
             'winner': TextInput(attrs={'class': u'form-control'}),
             'loser': TextInput(attrs={'class': u'form-control'})
-            }
+        }

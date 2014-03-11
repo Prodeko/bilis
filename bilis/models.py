@@ -9,7 +9,7 @@ class Player(models.Model):
     live_rating = models.IntegerField()
     favorite_color = models.IntegerField(default=16711680)
     def __unicode__(self):
-    	return self.name
+        return self.name
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.rating = 1000
