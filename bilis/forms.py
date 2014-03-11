@@ -1,3 +1,4 @@
+#coding: utf8
 from django.forms import ModelForm, TextInput
 from django.utils.translation import ugettext_lazy as _
 from bilis.models import Player, Game
@@ -19,9 +20,9 @@ class ResultForm(ModelForm):
         model = Game
         fields = ['winner', 'loser', 'under_table']
         labels = {
-            'winner': _('Voittaja'),
-            'loser': _('Häviäjä'),
-            'under_table': _('Pöydän alle'),
+            'winner': _(u'Voittaja'),
+            'loser': _(u'Häviäjä'),
+            'under_table': _(u'Pöydän alle'),
         }
         widgets = {
             'winner': TextInput(attrs={'class': u'form-control'}),
