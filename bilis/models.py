@@ -8,7 +8,7 @@ class Player(models.Model):
     rating = models.IntegerField()
     live_rating = models.IntegerField()
     favorite_color = models.IntegerField(default=16711680)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -27,7 +27,7 @@ class Game(models.Model):
     datetime = models.DateTimeField(auto_now=True)
     under_table = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
-    def __unicode__(self):
+    def __str__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
     def save(self, *args, **kwargs):
         self.winner.update_rating(self.loser.live_rating, 1)
