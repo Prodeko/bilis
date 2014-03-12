@@ -83,11 +83,21 @@ apt-get install -y mysql-server-5.5
 # install node.js and dependencies
 apt-get install -y g++ make nodejs
 
+# install npm packages
+npm install -g less
+npm install -g yuglify
+
 
 # --- Django ---
 
 pip install Django==1.6.2
-cd /vagrant && python manage.py syncdb
+
+# plugins
+pip install django-pipeline
+
+# tasks
+python /vagrant/manage.py syncdb
+python /vagrant/manage.py collectstatic --noinput -v 0
 
 
 # --- restart apache ---

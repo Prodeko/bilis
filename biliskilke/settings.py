@@ -56,11 +56,11 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = '/vagrant/bilis/compiled/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = '/bilis/compiled/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -72,10 +72,14 @@ STATICFILES_DIRS = (
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'pipeline.finders.FileSystemFinder',
+    'pipeline.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+    'pipeline.finders.CachedFileFinder',
 )
+
+# For Pipeline plugin
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'nzh5!3!!w9*sbn2frjst#sqkm)1zlcl4i7cpv447lcgu68n-op'
@@ -117,6 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'bilis',
+    'pipeline',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -147,5 +152,35 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+    }
+}
+
+# Django-pipeline configuration
+PIPELINE_ENABLED = True
+
+if DEBUG:
+    PIPELINE_CSS_COMPRESSOR = ''
+    PIPELINE_JS_COMPRESSOR = ''
+
+PIPELINE_COMPILERS = (
+  'pipeline.compilers.less.LessCompiler',
+)
+
+PIPELINE_CSS = {
+    'kilke': {
+        'source_filenames': (
+          'bootstrap_less/bootstrap.less',
+          'style.less'
+        ),
+        'output_filename': 'main.css',
+    },
+}
+
+PIPELINE_JS = {
+    'kilke': {
+        'source_filenames': (
+          'js/bootstrap.js',
+        ),
+        'output_filename': 'main.js',
     }
 }
