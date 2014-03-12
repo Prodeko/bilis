@@ -96,7 +96,7 @@ pip install Django==1.6.2
 pip install django-pipeline
 
 # tasks
-python /vagrant/manage.py syncdb
+python /vagrant/manage.py syncdb --noinput
 python /vagrant/manage.py collectstatic --noinput -v 0
 
 
