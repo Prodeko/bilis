@@ -13,6 +13,14 @@ sudo add-apt-repository -y ppa:fkrull/deadsnakes >> /tmp/add-apt-errors 2>&1
 # download the package lists from the repositories
 sudo apt-get update
 
+
+# --- miscellaneous ----
+
+sudo apt-get install -y curl
+sudo apt-get install -y git-core
+sudo apt-get install -y screen
+
+
 # --- python ---
 
 # install python3.3
@@ -21,14 +29,16 @@ sudo apt-get install -y python3.3
 # set default python version to 3.3
 sudo ln -sf /usr/bin/python3.3 /usr/bin/python
 sudo dpkg --configure python
-# install pip
-sudo apt-get install -y python-pip
 
-# --- miscellaneous ----
+# install setuptools
+curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -o - | sudo python
 
-sudo apt-get install -y curl
-sudo apt-get install -y git-core
-sudo apt-get install -y screen
+# install pip using setuptools
+sudo easy_install pip
+
+# Set default pip to 3.3
+sudo ln -sf /usr/local/bin/pip3.3 /usr/bin/pip
+
 
 # --- apache ---
 
@@ -87,7 +97,7 @@ sudo apt-get install -y nodejs
 
 # --- Django ---
 
-pip install Django
+sudo pip install Django==1.6.2
 cd /vagrant && python manage.py syncdb
 
 
