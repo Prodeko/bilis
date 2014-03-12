@@ -1,5 +1,5 @@
 #coding: utf8
-from django.forms import ModelForm, TextInput
+from django.forms import ModelForm, TextInput, Select
 from django.utils.translation import ugettext_lazy as _
 from bilis.models import Player, Game
 
@@ -25,6 +25,6 @@ class ResultForm(ModelForm):
             'under_table': _(u'Pöydän alle'),
         }
         widgets = {
-            'winner': TextInput(attrs={'class': u'form-control'}),
-            'loser': TextInput(attrs={'class': u'form-control'})
+            'winner': Select(attrs={'id': u'winner'}),
+            'loser': Select(attrs={'id': u'loser'})
         }
