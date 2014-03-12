@@ -170,6 +170,8 @@ PIPELINE_CSS = {
     'kilke': {
         'source_filenames': (
           'bootstrap_less/bootstrap.less',
+          'select2_css/select2.css',
+          'select2-bootstrap.css',
           'style.less'
         ),
         'output_filename': 'main.css',
@@ -180,6 +182,7 @@ PIPELINE_JS = {
     'kilke': {
         'source_filenames': (
           'js/bootstrap.js',
+          'js/select2.js',
         ),
         'output_filename': 'main.js',
     }
