@@ -187,3 +187,16 @@ PIPELINE_JS = {
         'output_filename': 'main.js',
     }
 }
+
+# Settings for the watchstatic-script
+# Delete-files should match those that pipeline compiles from LESS. See: https://github.com/cyberdelia/django-pipeline/issues/202
+WATCH_INTERVAL = 5              # Seconds
+WATCH_STATIC_FOLDERS = {
+    'bilis': {
+        'folder': 'bilis/static',
+        'delete': (
+            'bootstrap_less/bootstrap.css',
+            'style.css'
+        )
+    }
+}
