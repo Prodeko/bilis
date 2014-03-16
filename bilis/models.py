@@ -9,7 +9,7 @@ class Player(models.Model):
     live_rating = models.IntegerField()
     favorite_color = models.IntegerField(default=16711680)
     def __str__(self):
-        return self.name
+        return "#{id} {name}".format(id=self.pk, name= self.name)
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.rating = 1000
