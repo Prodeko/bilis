@@ -72,10 +72,12 @@ a2enmod rewrite
 # install packages
 echo mysql-server mysql-server/root_password select "vagrant" | debconf-set-selections
 echo mysql-server mysql-server/root_password_again select "vagrant" | debconf-set-selections
-apt-get install -y mysql-server-5.5
+apt-get install -y mysql-server-5.5 libmysqlclient-dev
 
 # create database
-# mysql -uroot -pvagrant -e "CREATE DATABASE test;"
+mysql -uroot -pvagrant -e "CREATE USER 'bilis'@'localhost' IDENTIFIED BY 'bilis';"
+mysql -uroot -pvagrant -e "GRANT ALL PRIVILEGES on *.* TO 'bilis'@'localhost';"
+mysql -uroot -pvagrant -e "CREATE DATABASE bilis;"
 
 
 # --- node.js ---
@@ -88,12 +90,8 @@ npm install -g less
 npm install -g yuglify
 
 
-# --- Django ---
-
-pip install Django==1.6.2
-
-# plugins
-pip install django-pipeline
+# --- Required python modules ---
+pip install -r /vagrant/requirements.txt
 
 # tasks
 cd /vagrant && python manage.py syncdb --noinput
