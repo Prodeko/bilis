@@ -52,6 +52,7 @@ class Command(NoArgsCommand):
                             print('Deleted ' + filepath)
                 except CompilerError:
                     print('Failed to compile!')
+                    # Just try again when the code is changed next time
                     pass
                 old_files = read_all()
             else:
@@ -59,5 +60,6 @@ class Command(NoArgsCommand):
             sc.enter(settings.WATCH_INTERVAL, 1, files_changed, (sc, old_files))
             
         s = sched.scheduler(time.time, time.sleep)
+        # The files are always compiled on the first run, as no old files are read
         s.enter(settings.WATCH_INTERVAL, 1, files_changed, (s,))
         s.run()

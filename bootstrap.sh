@@ -96,11 +96,12 @@ pip install Django==1.6.2
 pip install django-pipeline
 
 # tasks
-python /vagrant/manage.py syncdb --noinput
-python /vagrant/manage.py collectstatic --noinput -v 0
+cd /vagrant && python manage.py syncdb --noinput
 
+# Run server and static file watcher in screen
+su - vagrant -c "cd /vagrant && screen -S server -d -m python manage.py runserver 0.0.0.0:8000"
+su - vagrant -c "cd /vagrant && screen -S watcher -d -m python manage.py watchstatic"
 
 # --- restart apache ---
 
 service apache2 restart
-echo "cd /vagrant/ && echo 'http://127.0.0.1:9000' && python manage.py runserver 0.0.0.0:8000" >> /home/vagrant/.bashrc
