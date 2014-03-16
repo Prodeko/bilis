@@ -1,6 +1,7 @@
 from django.core.management.base import NoArgsCommand, CommandError
 from django.core.management import call_command
 from django.conf import settings
+from pipeline.exceptions import CompilerError
 import os
 import sys
 import sched, time
@@ -10,7 +11,6 @@ class Command(NoArgsCommand):
     help = 'Watches the static folder for changes, and runs the collectstatic-command if something is changed'
 
     def handle_noargs(self, **options):
-        old_files = {}
         
         def get_time(filename):
             stat = os.stat(filename)
@@ -36,24 +36,28 @@ class Command(NoArgsCommand):
                 all_files[key] = folder_dict
             return all_files
         
-        def files_changed(sc, old_files):
+        def files_changed(sc, old_files={}):
             # Read new files and their modification times
             new_files = read_all()
             if new_files != old_files:
                 print('Files changed!')
-                call_command('collectstatic', interactive=False)
-                # Delete the useless files created by django-pipeline
-                # See: https://github.com/cyberdelia/django-pipeline/issues/202
-                for key, sets in settings.WATCH_STATIC_FOLDERS.items():
-                    for filename in sets['delete']:
-                        filepath = sets['folder'] + '/' + filename
-                        os.remove(filepath)
-                        print('Deleted ' + filepath)
+                try:
+                    call_command('collectstatic', interactive=False)
+                    # Delete the useless files created by django-pipeline
+                    # See: https://github.com/cyberdelia/django-pipeline/issues/202
+                    for key, sets in settings.WATCH_STATIC_FOLDERS.items():
+                        for filename in sets['delete']:
+                            filepath = sets['folder'] + '/' + filename
+                            os.remove(filepath)
+                            print('Deleted ' + filepath)
+                except CompilerError:
+                    print('Failed to compile!')
+                    pass
                 old_files = read_all()
             else:
                 print('Files not changed!')
             sc.enter(settings.WATCH_INTERVAL, 1, files_changed, (sc, old_files))
             
         s = sched.scheduler(time.time, time.sleep)
-        s.enter(settings.WATCH_INTERVAL, 1, files_changed, (s, old_files))
+        s.enter(settings.WATCH_INTERVAL, 1, files_changed, (s,))
         s.run()
