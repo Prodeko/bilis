@@ -3,22 +3,19 @@ from django.core.management import call_command
 from django.conf import settings
 from pipeline.exceptions import CompilerError
 import os
-import sys
-import sched, time
+import sched
+import time
 
 
 class Command(NoArgsCommand):
     help = 'Watches the static folder for changes, and runs the collectstatic-command if something is changed'
 
     def handle_noargs(self, **options):
-        
         def get_time(filename):
             stat = os.stat(filename)
             mtime = stat.st_mtime
-            #if sys.platform == "win32":
-            #    mtime -= stat.st_ctime
             return mtime
-        
+
         def files_and_times(directory):
             files = []
             files_dict = {}
@@ -28,14 +25,14 @@ class Command(NoArgsCommand):
             for filename in files:
                 files_dict[filename] = get_time(filename)
             return files_dict
-        
+
         def read_all():
             all_files = {}
             for key, sets in settings.WATCH_STATIC_FOLDERS.items():
                 folder_dict = files_and_times(sets['folder'])
                 all_files[key] = folder_dict
             return all_files
-        
+
         def files_changed(sc, old_files={}):
             # Read new files and their modification times
             new_files = read_all()
@@ -58,7 +55,7 @@ class Command(NoArgsCommand):
             else:
                 print('Files not changed!')
             sc.enter(settings.WATCH_INTERVAL, 1, files_changed, (sc, old_files))
-            
+
         s = sched.scheduler(time.time, time.sleep)
         # The files are always compiled on the first run, as no old files are read
         s.enter(settings.WATCH_INTERVAL, 1, files_changed, (s,))
