@@ -25,6 +25,9 @@ class Player(models.Model):
         self.save()
         return change 
 
+    class Meta:
+        ordering = ['last_name', 'first_name']
+
 class Game(models.Model):
     winner = models.ForeignKey(Player, related_name="won_games")
     loser = models.ForeignKey(Player, related_name="lost_games")
