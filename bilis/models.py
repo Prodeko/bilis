@@ -4,10 +4,14 @@ from django.db.models.signals import post_save
 # Create your models here.
 
 class Player(models.Model):
-    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     rating = models.IntegerField()
     live_rating = models.IntegerField()
     favorite_color = models.IntegerField(default=16711680)
+    def _get_name(self):
+        return self.first_name + " " + self.last_name
+    name = property(_get_name)
     def __str__(self):
         return "#{id} {name}".format(id=self.pk, name= self.name)
     def save(self, *args, **kwargs):

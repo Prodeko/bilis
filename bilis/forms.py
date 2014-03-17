@@ -6,12 +6,14 @@ from bilis.models import Player, Game
 class PlayerForm(ModelForm):
     class Meta:
         model = Player
-        fields = ['name']
+        fields = ['first_name', 'last_name']
         labels = {
-            'name': _('Nimi'),
+            'first_name': _('Etunimi'),
+            'last_name': _('Sukunimi'),
         }
         widgets = {
-            'name': TextInput(attrs={'class': u'form-control'})
+            'first_name': TextInput(attrs={'class': u'form-control'}),
+            'last_name': TextInput(attrs={'class': u'form-control'}),
         }
 
 
