@@ -1,4 +1,4 @@
-from __future__ import division
+from datetime import datetime
 from django.db import models
 from django.db.models.signals import post_save
 # Create your models here.
@@ -20,10 +20,11 @@ class Player(models.Model):
             self.live_rating = 1000
         super(Player, self).save(*args, **kwargs)
     def update_rating(self, opponent_rating, result):
-        change = result * (self.live_rating / opponent_rating) * 10
-        self.live_rating = self.live_rating + change
-        self.save()
-        return change 
+        pass
+        #change = result * (self.live_rating / opponent_rating) * 10
+        #self.live_rating = self.live_rating + change
+        #self.save()
+        #return change 
 
     class Meta:
         ordering = ['last_name', 'first_name']
@@ -31,7 +32,7 @@ class Player(models.Model):
 class Game(models.Model):
     winner = models.ForeignKey(Player, related_name="won_games")
     loser = models.ForeignKey(Player, related_name="lost_games")
-    datetime = models.DateTimeField(auto_now=True)
+    datetime = models.DateTimeField()
     under_table = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
     def __str__(self):
@@ -39,4 +40,5 @@ class Game(models.Model):
     def save(self, *args, **kwargs):
         self.winner.update_rating(self.loser.live_rating, 1)
         self.loser.update_rating(self.winner.live_rating, -1)
+        self.datetime = datetime.now()
         super(Game, self).save(*args, **kwargs)
