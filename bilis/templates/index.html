@@ -82,7 +82,7 @@
                 <tbody>
                     {% for game in latest_games %}
                     <tr>
-                        <td>{{ game.datetime | date:"h.i"  }}</td>
+                        <td>{{ game.datetime | date:"H.i"  }}</td>
                         <td>{{ game.winner.name }}</td>
                         <td>{{ game.loser.name }}</td>
                     </tr>
