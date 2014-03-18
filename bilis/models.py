@@ -12,6 +12,10 @@ class Player(models.Model):
     def _get_name(self):
         return self.first_name + " " + self.last_name
     name = property(_get_name)
+    def _get_games(self):
+        games = self.won_games.all() | self.lost_games.all()
+        return sorted(games, key=lambda game: game.datetime, reverse=True)
+    games = property(_get_games)
     def __str__(self):
         return "#{id} {name}".format(id=self.pk, name= self.name)
     def save(self, *args, **kwargs):
