@@ -29,13 +29,12 @@ var force = d3.layout.force()
     .linkDistance(30)
     .size([width, height]);
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select(".container").append("svg")
     .attr("width", width)
     .attr("height", height);
 
 d3.json("/ajax/player_network/", function(error, graph) {
   if(error) return console.warn(error);
-  console.log(graph.links);
   force
       .nodes(graph.nodes)
       .links(graph.links)
