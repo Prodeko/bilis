@@ -60,11 +60,13 @@ def ajax_player_network(request):
         target = link[1]
         value = link_dict[link]
         item = {}
-        item['source']=source
-        item['target']=target
+        item['source']=source-1
+        item['target']=target-1
         item['value']=value
         links.append(item)
     struct['links'] = links
     struct['nodes'] = nodes
     return HttpResponse(json.dumps(struct, sort_keys=True,
                   indent=4, separators=(',', ': ')), content_type='application/json')
+def graph(request):
+    return render_to_response('graph.html')
