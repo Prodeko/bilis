@@ -10,6 +10,9 @@
                         <th>Sijoitus</th>
                         <th>Nimi</th>
                         <th>Pisteet</th>
+                        <th>Pelatut pelit</th>
+                        <th>Voitetut pelit</th>
+                        <th>Hävityt pelit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -17,7 +20,10 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ player.name }}</td>
-                        <td>{{ player.live_rating }}</td>
+                        <td>{{ player.elo }}</td>
+                        <td>{{ player.games_count }}</td>
+                        <td>{{ player.won_games.count }}</td>
+                        <td>{{ player.lost_games.count }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
