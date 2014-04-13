@@ -36,7 +36,7 @@ def new_player(request):
         }, context_instance=RequestContext(request))
 
 def players(request):
-    players = Player.objects.all().order_by('-live_rating')
+    players = Player.objects.all().order_by('-elo')[:100]
     return render_to_response('players.html',{
                 'players': players
         }, context_instance=RequestContext(request))
