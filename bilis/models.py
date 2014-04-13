@@ -6,8 +6,8 @@ from django.db.models.signals import post_save
 class Player(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    rating = models.IntegerField()
-    live_rating = models.IntegerField()
+    elo = models.IntegerField()
+    fargo = models.IntegerField()
     favorite_color = models.IntegerField(default=16711680)
     def _get_name(self):
         return self.first_name + " " + self.last_name
@@ -20,8 +20,8 @@ class Player(models.Model):
         return "#{id} {name}".format(id=self.pk, name= self.name)
     def save(self, *args, **kwargs):
         if self.pk is None:
-            self.rating = 1000
-            self.live_rating = 1000
+            self.elo = 1000
+            self.fargo = 1000
         super(Player, self).save(*args, **kwargs)
     def update_rating(self, opponent_rating, result):
         pass
@@ -42,7 +42,6 @@ class Game(models.Model):
     def __str__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
     def save(self, *args, **kwargs):
-        self.winner.update_rating(self.loser.live_rating, 1)
-        self.loser.update_rating(self.winner.live_rating, -1)
+        #TODO: implement rating calculation here
         self.datetime = datetime.now()
         super(Game, self).save(*args, **kwargs)
