@@ -6,8 +6,8 @@ from django.db.models.signals import post_save
 class Player(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    elo = models.IntegerField()
-    fargo = models.IntegerField()
+    elo = models.DecimalField(decimal_places=2, max_digits=6)
+    fargo = models.DecimalField(decimal_places=2, max_digits=6)
     favorite_color = models.IntegerField(default=16711680)
     def _get_name(self):
         return self.first_name + " " + self.last_name
@@ -39,10 +39,10 @@ class Player(models.Model):
 class Game(models.Model):
     winner = models.ForeignKey(Player, related_name="won_games")
     loser = models.ForeignKey(Player, related_name="lost_games")
-    winner_elo = models.IntegerField()
-    winner_fargo = models.IntegerField()
-    loser_elo = models.IntegerField()
-    loser_fargo = models.IntegerField()
+    winner_elo = models.DecimalField(decimal_places=2, max_digits=6)
+    winner_fargo = models.DecimalField(decimal_places=2, max_digits=6)
+    loser_elo = models.DecimalField(decimal_places=2, max_digits=6)
+    loser_fargo = models.DecimalField(decimal_places=2, max_digits=6)
     datetime = models.DateTimeField()
     under_table = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
