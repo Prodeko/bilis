@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Pelaajat</h1>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sijoitus</th>
+                        <th>Nimi</th>
+                        <th>Pisteet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in players %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ player.name }}</td>
+                        <td>{{ player.live_rating }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

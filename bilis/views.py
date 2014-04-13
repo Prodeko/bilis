@@ -35,6 +35,12 @@ def new_player(request):
                 'form': form,
         }, context_instance=RequestContext(request))
 
+def players(request):
+    players = Player.objects.all().order_by('-live_rating')
+    return render_to_response('players.html',{
+                'players': players
+        }, context_instance=RequestContext(request))
+
 def ajax_player_network(request):
     struct = {}
     nodes = []
