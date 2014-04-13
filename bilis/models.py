@@ -44,5 +44,5 @@ class Game(models.Model):
     def save(self, *args, **kwargs):
         self.winner.update_rating(self.loser.live_rating, 1)
         self.loser.update_rating(self.winner.live_rating, -1)
-        self.datetime = datetime.now()
+        #self.datetime = datetime.now()
         super(Game, self).save(*args, **kwargs)
