@@ -1,5 +1,5 @@
 #coding: utf8
-from django.forms import ModelForm, TextInput, Select
+from django.forms import ModelForm, TextInput, Select, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from bilis.models import Player, Game
 
@@ -30,3 +30,11 @@ class ResultForm(ModelForm):
             'winner': Select(attrs={'id': u'winner'}),
             'loser': Select(attrs={'id': u'loser'})
         }
+    def clean(self):
+
+        if (self.cleaned_data.get('winner') == self.cleaned_data.get('loser')):
+            raise ValidationError(
+                "Voittaja ja häviäjä ei voi olla sama pelaaja."
+            )
+
+        return self.cleaned_data

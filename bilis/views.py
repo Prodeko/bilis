@@ -21,6 +21,14 @@ def add_result(request):
         form = ResultForm(request.POST)
         if form.is_valid():
             form.save()
+        else:
+            players = Player.objects.all().order_by('-live_rating')[:20]
+            latest_games = Game.objects.all().order_by('-datetime')[:20]
+            return render_to_response('index.html',{
+                 'form': form,
+                 'players': players,
+                 'latest_games' : latest_games
+                 }, context_instance=RequestContext(request))
     return redirect('bilis.views.index')
 
 def new_player(request):
