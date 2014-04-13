@@ -22,7 +22,7 @@ def add_result(request):
         if form.is_valid():
             form.save()
         else:
-            players = Player.objects.all().order_by('-live_rating')[:20]
+            players = Player.objects.all().order_by('-elo')[:20]
             latest_games = Game.objects.all().order_by('-datetime')[:20]
             return render_to_response('index.html',{
                  'form': form,
