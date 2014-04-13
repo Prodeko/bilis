@@ -36,6 +36,10 @@ class Player(models.Model):
 class Game(models.Model):
     winner = models.ForeignKey(Player, related_name="won_games")
     loser = models.ForeignKey(Player, related_name="lost_games")
+    winner_elo = models.IntegerField()
+    winner_fargo = models.IntegerField()
+    loser_elo = models.IntegerField()
+    loser_fargo = models.IntegerField()
     datetime = models.DateTimeField()
     under_table = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
@@ -44,4 +48,8 @@ class Game(models.Model):
     def save(self, *args, **kwargs):
         #TODO: implement rating calculation here
         self.datetime = datetime.now()
+        self.winner_elo = self.winner.elo
+        self.loser_elo = self.loser.elo
+        self.winner_fargo = self.winner.fargo
+        self.loser_fargo = self.loser.fargo
         super(Game, self).save(*args, **kwargs)
