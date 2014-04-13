@@ -16,6 +16,9 @@ class Player(models.Model):
         games = self.won_games.all() | self.lost_games.all()
         return sorted(games, key=lambda game: game.datetime, reverse=True)
     games = property(_get_games)
+    def _get_games_count(self):
+        return self.won_games.count() + self.lost_games.count()
+    games_count = property(_get_games_count)
     def __str__(self):
         return "#{id} {name}".format(id=self.pk, name= self.name)
     def save(self, *args, **kwargs):
