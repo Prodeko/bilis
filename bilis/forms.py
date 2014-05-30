@@ -1,4 +1,3 @@
-﻿#coding: utf8
 from django.forms import ModelForm, TextInput, Select, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from bilis.models import Player, Game
