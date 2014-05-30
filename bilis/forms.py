@@ -16,8 +16,8 @@ class PlayerForm(ModelForm):
             'last_name': _('Sukunimi'),
         }
         widgets = {
-            'first_name': TextInput(attrs={'class': u'form-control'}),
-            'last_name': TextInput(attrs={'class': u'form-control'}),
+            'first_name': TextInput(attrs={'class': 'form-control'}),
+            'last_name': TextInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -26,9 +26,9 @@ class ResultForm(ModelForm):
         model = Game
         fields = ['winner', 'loser', 'under_table']
         labels = {
-            'winner': _(u'Voittaja'),
-            'loser': _(u'Häviäjä'),
-            'under_table': _(u'Pöydän alle'),
+            'winner': _('Voittaja'),
+            'loser': _('Häviäjä'),
+            'under_table': _('Pöydän alle'),
         }
         widgets = {
             'winner': Select(attrs={'id': u'winner'}),
