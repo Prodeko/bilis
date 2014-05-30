@@ -8,3 +8,4 @@
 /npm-debug.log
 /bilis/compiled/
 *.csv
+/bilis/static/uploads/

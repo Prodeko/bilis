@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^new/', views.new_player, name='new'),
     url(r'^add/', views.add_result, name='add'),
     url(r'^players/', views.players, name='players'),
-    url(r'^ajax/player_network/', views.ajax_player_network, name='player_network')
+    url(r'^ajax/player_network/', views.ajax_player_network, name='player_network'),
+    url(r'^upload/', views.upload_image, name='upload')
 )+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

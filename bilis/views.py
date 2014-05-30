@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.http import HttpResponse
 from django.template import RequestContext
 from bilis.models import Player, Game
-from bilis.forms import PlayerForm, ResultForm
+from bilis.forms import PlayerForm, ResultForm, ImageUploadForm
 from bilis import utils
 import json
 
@@ -86,3 +86,19 @@ def ajax_player_network(request):
     struct['nodes'] = nodes
     return HttpResponse(json.dumps(struct, sort_keys=True,
                   indent=4, separators=(',', ': ')), content_type='application/json')
+                  
+def upload_image(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            #import pdb; pdb.set_trace()
+            handle_image(request.FILES['image'])
+            return redirect('bilis.views.index')
+    else:
+        form = ImageUploadForm()
+    return render_to_response('file_form.html', {'form': form}, context_instance=RequestContext(request))
+        
+def handle_image(file):
+    with open('bilis/static/uploads/image.jpg', 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)

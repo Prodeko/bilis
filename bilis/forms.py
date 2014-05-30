@@ -1,4 +1,4 @@
-﻿from django.forms import ModelForm, TextInput, Select, ValidationError, CharField
+﻿from django.forms import Form, ModelForm, TextInput, Select, ValidationError, CharField, FileField
 from django.utils.translation import ugettext_lazy as _
 from bilis.models import Player, Game
 
@@ -52,3 +52,6 @@ class ResultForm(ModelForm):
                 )
 
         return self.cleaned_data
+        
+class ImageUploadForm(Form):
+    image = FileField(allow_empty_file=False)
