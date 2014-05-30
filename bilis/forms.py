@@ -4,7 +4,7 @@ from bilis.models import Player, Game
 
 class PlayerForm(ModelForm):
     favorite_color_string = CharField(
-        widget = TextInput(attrs={'class': 'color{hash:true}',}),
+        widget = TextInput(attrs={'class': 'form-control color{hash:true}',}),
         label = 'Lempiväri',
         initial = '#FF0000',
     )
