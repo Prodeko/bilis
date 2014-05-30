@@ -15,18 +15,34 @@
                         <div class="form-group">
                             <label for="id_winner">{{ form.winner.label }}</label>
                             {{ form.winner }}
+                            {% if form.winner.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.winner.errors }}
+                                </div>  
+                            {% endif %}
                         </div>
                     </div>
 					<div class="col-sm-4">
                         <div class="form-group">
                             <label for="id_winner">{{ form.loser.label }}</label>
 							{{ form.loser }}
+                            {% if form.loser.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.loser.errors }}
+                                </div>  
+                            {% endif %}
                         </div>
                     </div>
 				</div>
-				<div class="row">
-                    
-				</div>
+                {% if form.non_field_errors %}
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
 				<div class="row">
                     <div class="col-sm-4 col-sm-offset-5 col-xs-4 col-xs-offset-4">
                         <div class="checkbox">
