@@ -4,6 +4,10 @@ def html_color_to_int(color):
         color = color[1:]
     return int(color,16)
     
+def int_to_html_color(value):
+    color = "#"+hex(value)
+    return "#{:06X}".format(value)
+    
 def is_hex(x):
     try:
         int(x,16)

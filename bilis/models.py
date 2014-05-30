@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.db import models
 from django.db.models.signals import post_save
-# Create your models here.
+from bilis import utils
 
 class Player(models.Model):
     first_name = models.CharField(max_length=50)
@@ -12,6 +12,9 @@ class Player(models.Model):
     def _get_name(self):
         return self.first_name + " " + self.last_name
     name = property(_get_name)
+    def _get_favorite_color_string(self):
+        return utils.int_to_html_color(self.favorite_color)
+    favorite_color_string = property(_get_favorite_color_string)
     def _get_games(self):
         games = self.won_games.all() | self.lost_games.all()
         return sorted(games, key=lambda game: game.datetime, reverse=True)

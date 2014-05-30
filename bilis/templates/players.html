@@ -19,7 +19,7 @@
                     {% for player in players %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ player.name }}</td>
+                        <td><div class="swatch" style="background-color: {{player.favorite_color_string}}"></div>{{ player.name }}</td>
                         <td>{{ player.elo }}</td>
                         <td>{{ player.games_count }}</td>
                         <td>{{ player.won_games.count }}</td>
