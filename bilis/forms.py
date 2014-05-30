@@ -1,8 +1,13 @@
-from django.forms import ModelForm, TextInput, Select, ValidationError
+﻿from django.forms import ModelForm, TextInput, Select, ValidationError, CharField
 from django.utils.translation import ugettext_lazy as _
 from bilis.models import Player, Game
 
 class PlayerForm(ModelForm):
+    favorite_color_string = CharField(
+        widget = TextInput(attrs={'class': 'color{hash:true}',}),
+        label = 'Lempiväri',
+        initial = '#FF0000',
+    )
     class Meta:
         model = Player
         fields = ['first_name', 'last_name']

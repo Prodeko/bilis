@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from bilis.models import Player, Game
 from bilis.forms import PlayerForm, ResultForm
+from bilis import utils
 import json
 
 def index(request):
@@ -36,7 +37,9 @@ def new_player(request):
     if request.method == 'POST':
         form = PlayerForm(request.POST)
         if form.is_valid():
-            form.save()
+            player = form.save(commit=False)
+            player.favorite_color = utils.html_color_to_int(form.cleaned_data['favorite_color_string'])
+            player.save()
             return redirect('bilis.views.index')
     else:
         form = PlayerForm()

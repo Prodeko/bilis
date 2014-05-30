@@ -184,6 +184,7 @@ PIPELINE_JS = {
         'source_filenames': (
           'js/bootstrap.js',
           'js/select2.js',
+          'js/jscolor.js',
         ),
         'output_filename': 'main.js',
     }
