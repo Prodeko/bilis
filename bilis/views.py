@@ -21,6 +21,7 @@ def add_result(request):
         form = ResultForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('bilis.views.index')
         else:
             players = Player.objects.all().order_by('-elo')[:20]
             latest_games = Game.objects.all().order_by('-datetime')[:20]
