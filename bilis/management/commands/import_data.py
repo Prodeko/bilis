@@ -26,29 +26,44 @@ class Command(BaseCommand):
             first_name = row['name'].split(' ')[0]
             last_name = " ".join(row['name'].split(' ')[1:])
             id = row['id']
-            live_rating = int(math.floor(float(row['live_rating'])))
-            #print (first_name + " " + last_name)
-            #print (live_rating)
+            elo = 100
             print (id)
-            p = Player.objects.create(pk=id, first_name=first_name, last_name=last_name, live_rating=live_rating, rating=live_rating)
+            p = Player.objects.create(pk=id, first_name=first_name, last_name=last_name, elo=elo, fargo=elo)
             p.save()
 
     def import_games(self, filename='bilis_games.csv'):
         file = open(filename, encoding='utf-8')
         reader = DictReader(file, delimiter=';')
+        num_lines = sum(1 for line in open(filename, encoding='utf-8'))-1
+
+        rows_in = 0 
+        rows_out = 0
+        rows_rejected = 0
         for row in reader:
+            rows_in = rows_in + 1
             if not row['winner'] or not row['loser']:
+                print("empty row")
+                rows_rejected = rows_rejected+1
                 continue
             datetimestr = row['date'] + " " + row['time'] 
             try:
                 dt = timezone.make_aware(datetime.fromtimestamp(mktime((strptime(datetimestr, "%m/%d/%Y %I:%M:%S %p")))), timezone.get_default_timezone())
             except(ValueError):
                 print("FAIL: " + datetimestr)
+                rows_rejected = rows_rejected+1
+                continue
             winner = Player.objects.get(pk=row['winner'])
             loser = Player.objects.get(pk=row['loser'])
-            g = Game.objects.create(datetime=dt, winner=winner, loser=loser)
-            g.save()
-            print(g.pk)
+            try:
+                g = Game.objects.create(datetime=dt, winner=winner, loser=loser)
+                g.save()
+            except:
+                print("{} {} {}".format(dt, winner, loser))
+                rows_rejected = rows_rejected+1
+                continue
+            rows_out = rows_out + 1
+        print("Read in {rows_in} of {total}".format(rows_in=rows_in, total=num_lines))
+        print("Successfully processed {rows_out}, rejected {rows_rejected}".format(rows_out=rows_out, rows_rejected=rows_rejected))
 
     def handle(self, *args, **options):
         self.import_players() 

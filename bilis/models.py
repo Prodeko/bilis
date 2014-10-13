@@ -26,15 +26,18 @@ class Player(models.Model):
         return "#{id} {name}".format(id=self.pk, name= self.name)
     def save(self, *args, **kwargs):
         if self.pk is None:
-            self.elo = 1000
-            self.fargo = 1000
+            self.elo = 100
+            self.fargo = 100
         super(Player, self).save(*args, **kwargs)
     def update_rating(self, opponent_rating, result):
-        pass
-        #change = result * (self.live_rating / opponent_rating) * 10
-        #self.live_rating = self.live_rating + change
-        #self.save()
-        #return change 
+        if(result>0):
+            change = round(10/(1+10**((self.elo - opponent_rating)/100)),1)
+        else:
+            change = round(-10/(1+10**((opponent_rating - self.elo)/100)),1)
+        new_rating = self.elo + change
+        self.elo = new_rating
+        self.save()
+        return change 
 
     class Meta:
         ordering = ['last_name', 'first_name']
@@ -53,7 +56,12 @@ class Game(models.Model):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
     def save(self, *args, **kwargs):
         #TODO: implement rating calculation here
-        self.datetime = datetime.now()
+        winner_elo = self.winner.elo
+        loser_elo = self.loser.elo
+        self.winner.update_rating(loser_elo, 1)
+        self.loser.update_rating(winner_elo, 0)
+        if(self.datetime is None):
+            self.datetime = datetime.now()
         self.winner_elo = self.winner.elo
         self.loser_elo = self.loser.elo
         self.winner_fargo = self.winner.fargo
