@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://code.jquery.com/jquery.js"></script>
         {% load compressed %}
-	{% load extras %}
+	      {% load extras %}
         {% compressed_css 'kilke' %}
         {% compressed_js 'kilke' %}
         <title>{% block title %}Biliskilke{% endblock %}</title>
@@ -27,6 +27,7 @@
                         <li><a href="{% url 'index' %}">Etusivu</a></li>
                         <li><a href="{% url 'new' %}">Uusi pelaaja</a></li>
                         <li><a href="{% url 'players' %}">Pelaajat</a></li>
+                        <li><a href="{% url 'games' %}">Kaikki pelit</a></li>
                     </ul>
                 </div>
             </div>
@@ -43,4 +44,3 @@
         </div>
     </body>
 </html>
-

@@ -54,6 +54,12 @@ def players(request):
                 'players': players
         }, context_instance=RequestContext(request))
 
+def games(request):
+    games = Game.objects.all().order_by('-datetime')
+    return render_to_response('games.html', {
+                'games': games
+    }, context_instance=RequestContext(request))
+
 def ajax_player_network(request):
     struct = {}
     nodes = []
@@ -87,7 +93,7 @@ def ajax_player_network(request):
     struct['nodes'] = nodes
     return HttpResponse(json.dumps(struct, sort_keys=True,
                   indent=4, separators=(',', ': ')), content_type='application/json')
-                  
+
 def upload_image(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
@@ -98,7 +104,7 @@ def upload_image(request):
     else:
         form = ImageUploadForm()
     return render_to_response('file_form.html', {'form': form}, context_instance=RequestContext(request))
-        
+
 def handle_image(file):
     with open(settings.IMAGE_UPLOAD_PATH+'image.jpg', 'wb+') as destination:
         for chunk in file.chunks():

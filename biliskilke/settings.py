@@ -1,4 +1,4 @@
-# Django settings for biliskilke project.
+﻿# Django settings for biliskilke project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -170,10 +170,11 @@ PIPELINE_COMPILERS = (
 PIPELINE_CSS = {
     'kilke': {
         'source_filenames': (
-          'bootstrap_less/bootstrap.less',
-          'select2_css/select2.css',
-          'select2-bootstrap.css',
-          'style.less'
+            'bootstrap_less/bootstrap.less',
+            'select2_css/select2.css',
+            'select2-bootstrap.css',
+            'bootstrap-table.min.css',
+            'style.less',
         ),
         'output_filename': 'main.css',
     },
@@ -185,6 +186,7 @@ PIPELINE_JS = {
           'js/bootstrap.js',
           'js/select2.js',
           'js/jscolor.js',
+          'js/bootstrap-table.min.js',
         ),
         'output_filename': 'main.js',
     }

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from bilis import views
+from bilis import json
 from django.contrib import admin
 admin.autodiscover()
 
@@ -12,5 +13,7 @@ urlpatterns = patterns('',
     url(r'^add/', views.add_result, name='add'),
     url(r'^players/', views.players, name='players'),
     url(r'^ajax/player_network/', views.ajax_player_network, name='player_network'),
-    url(r'^upload/', views.upload_image, name='upload')
+    url(r'^upload/', views.upload_image, name='upload'),
+    url(r'^games/', views.games, name='games'),
+    url(r'^ajax/games/', json.games, name='ajax_games')
 )+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
