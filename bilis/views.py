@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response, redirect, render
 from django.forms import ModelForm
 from django.conf import settings
+from django.core.management import call_command
 from django.http import HttpResponse
 from django.template import RequestContext
 from bilis.models import Player, Game
@@ -100,6 +101,7 @@ def upload_image(request):
         if form.is_valid():
             #import pdb; pdb.set_trace()
             handle_image(request.FILES['image'])
+            call_command('collectstatic', interactive=False)
             return redirect('bilis.views.index')
     else:
         form = ImageUploadForm()
