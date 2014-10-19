@@ -1,5 +1,6 @@
 from django.shortcuts import render_to_response, redirect, render
 from django.forms import ModelForm
+from django.conf import settings
 from django.http import HttpResponse
 from django.template import RequestContext
 from bilis.models import Player, Game
@@ -99,6 +100,6 @@ def upload_image(request):
     return render_to_response('file_form.html', {'form': form}, context_instance=RequestContext(request))
         
 def handle_image(file):
-    with open('bilis/static/uploads/image.jpg', 'wb+') as destination:
+    with open(settings.IMAGE_UPLOAD_PATH+'image.jpg', 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)

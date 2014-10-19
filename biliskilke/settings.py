@@ -190,6 +190,10 @@ PIPELINE_JS = {
     }
 }
 
+# Path for user-uploaded images (the ad banner, currently)
+# Can be a relative or absolute path
+IMAGE_UPLOAD_PATH = '/vagrant/bilis/static/uploads/'
+
 # Settings for the watchstatic-script
 # Delete-files should match those that pipeline compiles from LESS. See: https://github.com/cyberdelia/django-pipeline/issues/202
 WATCH_INTERVAL = 5              # Seconds
