@@ -1,7 +1,7 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block body %}
-  <table id="game-table" class="table table-striped" data-url="{% url 'ajax_games' %}" data-side-pagination="server" data-pagination="true" data-search="true">
+  <table id="game-table" class="table table-striped" data-toggle="table" data-url="{% url 'ajax_games' %}" data-side-pagination="server" data-pagination="true" data-search="true">
     <thead>
       <tr>
         <th data-field="datetime" data-sortable="true">Aika</th>
@@ -10,10 +10,4 @@
       </tr>
     </thead>
   </table>
-  <script>
-    $(document).ready(function() {
-      var $table = $('#game-table');
-      $table.bootstrapTable();
-    });
-</script>
 {% endblock %}
