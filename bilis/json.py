@@ -34,3 +34,21 @@ def games(request):
     struct['rows'] = rows
     return HttpResponse(json.dumps(struct, sort_keys=True,
                         indent=4, separators=(',', ': ')), content_type='application/json')
+
+def players(request):
+    #sijoitus, nimi, pisteet, pelatut, voitetut, hävityt
+    players = Player.objects.all()
+    rows = []
+    for i,player in enumerate(players):
+        item = {}
+        item['position'] = i+1
+        item['name'] = player.name
+        item['rating'] = str(player.elo)
+        item['games'] = len(player.games)
+        item['won_games'] = player.won_games.count()
+        item['lost_games'] = player.lost_games.count()
+        rows.append(item)
+    total = players.count()
+    print(rows)
+    return HttpResponse(json.dumps(rows, sort_keys=True,
+                        indent=4, separators=(',',': ')), content_type='application/json')

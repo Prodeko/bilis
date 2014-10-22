@@ -4,29 +4,14 @@
     <div class="row">
         <div class="col-xs-12">
             <h1>Pelaajat</h1>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Sijoitus</th>
-                        <th>Nimi</th>
-                        <th>Pisteet</th>
-                        <th>Pelatut pelit</th>
-                        <th>Voitetut pelit</th>
-                        <th>Hävityt pelit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for player in players %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td><div class="swatch" style="background-color: {{player.favorite_color_string}}"></div>{{ player.name }}</td>
-                        <td>{{ player.elo }}</td>
-                        <td>{{ player.games_count }}</td>
-                        <td>{{ player.won_games.count }}</td>
-                        <td>{{ player.lost_games.count }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
+            <table id="player-table" class="table table-bordered table-striped" data-toggle="table" data-url="{% url 'ajax_players' %}">
+              <thead>
+                <th data-field="position" data-sortable="true">Sijoitus</th>
+                <th data-field="name" data-sortable="true">Nimi</th>
+                <th data-field="rating" data-sortable="true">Pisteet</th>
+                <th data-field="games" data-sortable="true">Pelatut pelit</th>
+                <th data-field="won_games" data-sortable="true">Voitetut pelit</th>
+                <th data-field="lost_games" data-sortable="true">Hävityt pelit</th>
             </table>
         </div>
     </div>

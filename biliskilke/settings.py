@@ -173,7 +173,7 @@ PIPELINE_CSS = {
             'bootstrap_less/bootstrap.less',
             'select2_css/select2.css',
             'select2-bootstrap.css',
-            'bootstrap-table.min.css',
+            'bootstrap-table.css',
             'style.less',
         ),
         'output_filename': 'main.css',
@@ -186,7 +186,7 @@ PIPELINE_JS = {
           'js/bootstrap.js',
           'js/select2.js',
           'js/jscolor.js',
-          'js/bootstrap-table.min.js',
+          'js/bootstrap-table.js',
         ),
         'output_filename': 'main.js',
     }
