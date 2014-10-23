@@ -1,18 +1,14 @@
 ﻿{% extends "base.html" %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-xs-12">
-            <h1>Pelaajat</h1>
-            <table id="player-table" class="table table-bordered table-striped" data-toggle="table" data-url="{% url 'ajax_players' %}">
-              <thead>
-                <th data-field="position" data-sortable="true">Sijoitus</th>
-                <th data-field="name" data-sortable="true">Nimi</th>
-                <th data-field="rating" data-sortable="true">Pisteet</th>
-                <th data-field="games" data-sortable="true">Pelatut pelit</th>
-                <th data-field="won_games" data-sortable="true">Voitetut pelit</th>
-                <th data-field="lost_games" data-sortable="true">Hävityt pelit</th>
-            </table>
-        </div>
-    </div>
+  <h1>Pelaajat</h1>
+  <table id="player-table" class="table table-bordered table-striped" data-toggle="table" data-url="{% url 'ajax_players' %}">
+    <thead>
+      <th data-field="position" data-sortable="true">Sijoitus</th>
+      <th data-field="name" data-sortable="true">Nimi</th>
+      <th data-field="rating" data-sortable="true">Pisteet</th>
+      <th data-field="games" data-sortable="true">Pelatut pelit</th>
+      <th data-field="won_games" data-sortable="true">Voitetut pelit</th>
+      <th data-field="lost_games" data-sortable="true">Hävityt pelit</th>
+  </table>
 {% endblock %}

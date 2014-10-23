@@ -3,38 +3,37 @@
 {% block title %}Lisää pelaaja{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
-            <form action="/new/" method="post" class="form-horizontal" role="form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_first_name" class="col-sm-2 control-label">{{ form.first_name.label }}</label>
-                    <div class="col-sm-6">
-                        {{ form.first_name }}
-                        {{ form.first_name.errors }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_last_name" class="col-sm-2 control-label">{{ form.last_name.label }}</label>
-                    <div class="col-sm-6">
-                        {{ form.last_name }}
-                        {{ form.last_name.errors }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_last_name" class="col-sm-2 control-label">{{ form.favorite_color_string.label }}</label>
-                    <div class="col-sm-6">
-                        {{ form.favorite_color_string }}
-                        {{ form.favorite_color_string.errors }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-6 col-sm-offset-2">
-                        <input class="btn btn-default btn-lg btn-block" type="submit" value="Luo" />
-                    </div>
-                </div>
-            </form>
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <form action="/new/" method="post" class="form-horizontal" role="form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_first_name" class="col-sm-2 control-label">{{ form.first_name.label }}</label>
+        <div class="col-sm-6">
+          {{ form.first_name }}
+          {{ form.first_name.errors }}
         </div>
-    </div>
+      </div>
+      <div class="form-group">
+        <label for="id_last_name" class="col-sm-2 control-label">{{ form.last_name.label }}</label>
+        <div class="col-sm-6">
+          {{ form.last_name }}
+          {{ form.last_name.errors }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="id_last_name" class="col-sm-2 control-label">{{ form.favorite_color_string.label }}</label>
+        <div class="col-sm-6">
+          {{ form.favorite_color_string }}
+          {{ form.favorite_color_string.errors }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-2">
+          <input class="btn btn-default btn-lg btn-block" type="submit" value="Luo" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -1,46 +1,48 @@
 ﻿{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="fi">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://code.jquery.com/jquery.js"></script>
-        {% load compressed %}
-	      {% load extras %}
-        {% compressed_css 'kilke' %}
-        {% compressed_js 'kilke' %}
-        <title>{% block title %}Biliskilke{% endblock %}</title>
-    </head>
-    <body>
-        <nav class="navbar navbar-default" role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
-                        <span class="sr-only">Navigoi</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="{% url 'index' %}">Bilis on paras :D:DDD</a>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li><a href="{% url 'index' %}">Etusivu</a></li>
-                        <li><a href="{% url 'new' %}">Uusi pelaaja</a></li>
-                        <li><a href="{% url 'players' %}">Pelaajat</a></li>
-                        <li><a href="{% url 'games' %}">Kaikki pelit</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="container" id="content">
-            <div class="row" id="top-banner">
-                <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-		    {% image_or_empty 'uploads/image.jpg' %}
-                </div>
-            </div>
-            {% block body %}
-                <p>Ime parsaa</p>
-            {% endblock %}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://code.jquery.com/jquery.js"></script>
+      {% load compressed %}
+      {% load extras %}
+      {% compressed_css 'kilke' %}
+      {% compressed_js 'kilke' %}
+      <title>{% block title %}Biliskilke{% endblock %}</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+            <span class="sr-only">Navigoi</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'index' %}">Bilis on paras :D:DDD</a>
         </div>
-    </body>
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'index' %}">Etusivu</a></li>
+            <li><a href="{% url 'new' %}">Uusi pelaaja</a></li>
+            <li><a href="{% url 'players' %}">Pelaajat</a></li>
+            <li><a href="{% url 'games' %}">Kaikki pelit</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container" id="content">
+      <div class="row" id="top-banner">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+          {% image_or_empty 'uploads/image.jpg' %}
+        </div>
+      </div>
+      <div class="row">
+        {% block body %}
+          <p>Ime parsaa</p>
+        {% endblock %}
+      </div>
+    </div>
+  </body>
 </html>

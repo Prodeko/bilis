@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block body %}
+<div class="row">
   <table id="game-table" class="table table-striped" data-toggle="table" data-url="{% url 'ajax_games' %}" data-side-pagination="server" data-pagination="true" data-search="true">
     <thead>
       <tr>
@@ -10,4 +11,5 @@
       </tr>
     </thead>
   </table>
+</div>
 {% endblock %}
