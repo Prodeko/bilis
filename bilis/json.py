@@ -1,6 +1,7 @@
 import json
 import datetime
 from django.http import HttpResponse
+from django.utils.html import escape
 from bilis.models import Player, Game
 
 def games(request):
@@ -26,8 +27,8 @@ def games(request):
     for game in games:
         item = {}
         item['datetime'] = game.datetime.strftime("%d.%m.%y %H:%m")
-        item['winner'] = game.winner.name
-        item['loser'] = game.loser.name
+        item['winner'] = escape(game.winner.name)
+        item['loser'] = escape(game.loser.name)
         rows.append(item)
     total = Game.objects.count()
     struct['total'] = total
@@ -42,7 +43,7 @@ def players(request):
     for i,player in enumerate(players):
         item = {}
         item['position'] = i+1
-        item['name'] = player.name
+        item['name'] = escape(player.name)
         item['rating'] = str(player.elo)
         item['games'] = len(player.games)
         item['won_games'] = player.won_games.count()
