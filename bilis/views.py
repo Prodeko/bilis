@@ -111,3 +111,8 @@ def handle_image(file):
     with open(settings.IMAGE_UPLOAD_PATH+'image.jpg', 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
+
+def chart(request, player):
+    return render_to_response('rating_chart.html', {
+            'player': player
+}, context_instance=RequestContext(request))

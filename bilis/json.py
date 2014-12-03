@@ -1,6 +1,7 @@
 import json
 import datetime
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.utils.html import escape
 from bilis.models import Player, Game
 
@@ -53,3 +54,13 @@ def players(request):
     print(rows)
     return HttpResponse(json.dumps(rows, sort_keys=True,
                         indent=4, separators=(',',': ')), content_type='application/json')
+
+def rating_time_series(request, player):
+    player = get_object_or_404(Player, pk=player)
+    data = []
+    for i, game in enumerate(reversed(player.games)): #this is a bit hacky, should rethink the API
+        point = {}
+        point['x'] = i + 1
+        point['y'] = float(game.winner_elo) if game.winner==player else float(game.loser_elo)
+        data.append(point)
+    return HttpResponse(json.dumps(data, indent=4, sort_keys=True, separators=(',', ': ')), content_type='application/json')

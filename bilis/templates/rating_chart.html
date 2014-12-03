@@ -1,0 +1,85 @@
+﻿{% extends "base.html" %}
+
+{% block body %}
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<svg id="visualization" width="500" height="300"></svg>
+
+<script>
+  $.getJSON("{%url 'rating_time_series' player=player %}", function(data) {
+    visualize(data);
+  });
+
+
+  function visualize(data) {
+    var vis = d3.select("#visualization"),
+      WIDTH = 500,
+      HEIGHT = 300,
+      LINE_COLOR = "blue",
+      LINE_STROKE_WIDTH = 1.5,
+      POINT_RADIUS = 4,
+      MARGINS = {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 50
+      },
+      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function(d) {
+        return d.x;
+      }), d3.max(data, function(d) {
+        return d.x;
+      })]),
+      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(data, function(d) {
+        return d.y;
+      }), d3.max(data, function(d) {
+        return d.y;
+      })]),
+      xAxis = d3.svg.axis()
+        .scale(xRange)
+        .tickSize(2)
+        .tickFormat(d3.format("d"))
+      yAxis = d3.svg.axis()
+        .scale(yRange)
+        .tickSize(2)
+        .tickFormat(d3.format("d"))
+        .orient('left')
+
+      vis.append('svg:g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0, ' + (HEIGHT - MARGINS.bottom) +')')
+        .call(xAxis);
+
+      vis.append('svg:g')
+        .attr('class', 'y axis')
+        .attr('transform', 'translate(' + (MARGINS.left) + ',0)')
+        .call(yAxis);
+
+      var line = d3.svg.line()
+        .x(function(d) {
+          return xRange(d.x);
+        })
+        .y(function(d) {
+          return yRange(d.y);
+        })
+        .interpolate('linear');
+
+      var points = vis.selectAll(".point")
+        .data(data)
+        .enter().append("svg:circle")
+          .attr("cx", function(d,i) { return xRange(d.x); })
+          .attr("cy", function(d,i) { return yRange(d.y); })
+          .attr("r", POINT_RADIUS)
+          .attr("stroke", LINE_COLOR)
+          .attr("fill", LINE_COLOR)
+            .append("svg:title")
+            .text(function(d) { return d.y; });
+
+      vis.append('svg:path')
+        .attr('d', line(data))
+        .attr('stroke', LINE_COLOR)
+        .attr('stroke-width', LINE_STROKE_WIDTH)
+        .attr('fill', 'none');
+  }
+
+</script>
+{% endblock %}
