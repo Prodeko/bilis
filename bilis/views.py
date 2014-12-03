@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django.conf import settings
 from django.core.management import call_command
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from bilis.models import Player, Game
 from bilis.forms import PlayerForm, ResultForm, ImageUploadForm
@@ -113,6 +114,7 @@ def handle_image(file):
             destination.write(chunk)
 
 def chart(request, player):
+    player = get_object_or_404(Player, pk=player)
     return render_to_response('rating_chart.html', {
             'player': player
 }, context_instance=RequestContext(request))

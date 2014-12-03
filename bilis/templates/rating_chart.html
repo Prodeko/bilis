@@ -2,11 +2,11 @@
 
 {% block body %}
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-
+<h2>#{{ player.pk }}: {{ player.name }}</h2>
 <svg id="visualization" width="500" height="300"></svg>
 
 <script>
-  $.getJSON("{%url 'rating_time_series' player=player %}", function(data) {
+  $.getJSON("{%url 'rating_time_series' player=player.pk %}", function(data) {
     visualize(data);
   });
 
@@ -15,7 +15,7 @@
     var vis = d3.select("#visualization"),
       WIDTH = 500,
       HEIGHT = 300,
-      LINE_COLOR = "blue",
+      LINE_COLOR = "{{ player.favorite_color_string }}",
       LINE_STROKE_WIDTH = 1.5,
       POINT_RADIUS = 4,
       MARGINS = {
