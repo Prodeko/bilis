@@ -56,6 +56,12 @@ def players(request):
                 'players': players
         }, context_instance=RequestContext(request))
 
+def player(request, player):
+    player = get_object_or_404(Player, pk=player)
+    return render_to_response('player.html',{
+                'player': player
+        }, context_instance=RequestContext(request))
+
 def games(request):
     games = Game.objects.all().order_by('-datetime')
     return render_to_response('games.html', {

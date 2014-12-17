@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <h1>Pelaaja: {{ player.first_name }} {{ player.last_name }}</h1>
+  <p>ELO-rating: <b>{{ player.elo }}</b></p>
+{% endblock %}
