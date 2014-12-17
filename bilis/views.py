@@ -50,6 +50,12 @@ def new_player(request):
                 'form': form,
         }, context_instance=RequestContext(request))
 
+def delete_player(request, player):
+    player = get_object_or_404(Player, pk=player)
+    if(len(player.games)==0):
+        player.delete()
+    return redirect('bilis.views.index')
+
 def players(request):
     players = Player.objects.all().order_by('-elo')
     return render_to_response('players.html',{

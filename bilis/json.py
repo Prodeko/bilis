@@ -1,5 +1,6 @@
 import json
 import datetime
+import MySQLdb
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.html import escape
@@ -39,20 +40,40 @@ def games(request):
 
 def players(request):
     #sijoitus, nimi, pisteet, pelatut, voitetut, hävityt
-    players = Player.objects.all()
+    offset = int(request.GET.get('offset'))
+    limit = int(request.GET.get('limit'))
+    search = request.GET.get('search')
+    sort = request.GET.get('sort')
+    order = request.GET.get('order')
+    if(sort=='name'):
+        sort='last_name'
+    if(sort is None):
+        sort = 'last_name'
+    else:
+        sort = MySQLdb.escape_string(sort)
+    if(search is None):
+        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.elo>x.elo) as position from bilis_player as x order by {} {}".format(sort, order))[offset:offset+limit]
+        print(sort)
+    else:
+        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.elo>x.elo) as position from bilis_player as x where first_name like %s or last_name like %s order by {} {}".format(sort, order), ['%'+search+'%', '%'+search+'%'])[offset:offset+limit]
+        #players = Player.objects.all().filter(first_name__icontains=search) | Player.objects.all().filter(last_name__icontains=search) 
+
+    struct = {}
     rows = []
     for i,player in enumerate(players):
         item = {}
-        item['position'] = i+1
+        item['position'] = player.position
         item['name'] = escape(player.name)
-        item['rating'] = str(player.elo)
+        item['elo'] = str(player.elo)
         item['games'] = len(player.games)
         item['won_games'] = player.won_games.count()
         item['lost_games'] = player.lost_games.count()
         rows.append(item)
-    total = players.count()
+    total = Player.objects.count()
+    struct['total'] = total
+    struct['rows'] = rows
     print(rows)
-    return HttpResponse(json.dumps(rows, sort_keys=True,
+    return HttpResponse(json.dumps(struct, sort_keys=True,
                         indent=4, separators=(',',': ')), content_type='application/json')
 
 def rating_time_series(request, player):
