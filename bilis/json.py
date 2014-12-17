@@ -55,6 +55,7 @@ def players(request):
         players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.elo>x.elo) as position from bilis_player as x order by {} {}".format(sort, order))[offset:offset+limit]
         print(sort)
     else:
+        search = MySQLdb.escape_string(search)
         players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.elo>x.elo) as position from bilis_player as x where first_name like %s or last_name like %s order by {} {}".format(sort, order), ['%'+search+'%', '%'+search+'%'])[offset:offset+limit]
         #players = Player.objects.all().filter(first_name__icontains=search) | Player.objects.all().filter(last_name__icontains=search) 
 
