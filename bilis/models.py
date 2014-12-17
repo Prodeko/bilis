@@ -39,22 +39,25 @@ class Player(models.Model):
         self.save()
         return change 
 
-	def update_rating_fargo(self, opponent_rating, opponent_games, result):
-	
-		if (self.games>50): self_robust = math.log(self.games,1.01029)-332.268
-		else: self_robust = 50
-		
-		if (opponent_games>50): opponent_robust = math.log(opponent_games,1.01029)-332.268
-		else: opponent_robust = 50	
-		
-		
-		if (result>0):
-			change = 630*(1-(1/(1+math.pow(2,((opponent_rating-self_rating)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
-		else:
-			change = 630*(0-(1/(1+math.pow(2,((opponent_rating-self_rating)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
-		return change	
-		
-		
+    def update_rating_fargo(self, opponent_rating, opponent_games, result):
+
+        if (self.games>50): 
+            self_robust = math.log(self.games,1.01029)-332.268
+        else:
+            self_robust = 50
+        
+        if (opponent_games>50): 
+            opponent_robust = math.log(opponent_games,1.01029)-332.268
+        else:
+            opponent_robust = 50
+
+
+        if (result>0):
+            change = 630*(1-(1/(1+math.pow(2,((opponent_rating-self_rating)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
+        else:
+            change = 630*(0-(1/(1+math.pow(2,((opponent_rating-self_rating)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
+        return change
+
     class Meta:
         ordering = ['last_name', 'first_name']
 
