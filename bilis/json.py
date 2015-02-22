@@ -29,9 +29,8 @@ def games(request):
     for game in games:
         item = {}
         item['datetime'] = game.datetime.strftime("%d.%m.%y %H:%m")
-        item['winner'] = "<a href='/player/" + str(game.winner.pk) + "/' >" + escape(game.winner.name) + "</a>"
-        item['loser'] = "<a href='/player/" + str(game.loser.pk) + "/' >" + escape(game.loser.name) + "</a>"
-        
+        item['winner'] = "<a href='/player/" + str(game.winner.pk) + "/' >" + escape(game.winner.name) + "</a>" + (" <img src='{{ static  }}'>" if game.under_table else "")
+        item['loser'] =  "<a href='/player/" + str(game.loser.pk) + "/' >" + escape(game.loser.name) + "</a>"
         rows.append(item)
     total = Game.objects.count()
     struct['total'] = total
@@ -80,7 +79,8 @@ def rating_time_series(request, player):
     data = []
     for i, game in enumerate(reversed(player.games)): #this is a bit hacky, should rethink the API
         point = {}
-        point['x'] = i + 1
+        point['x'] = i
         point['y'] = float(game.winner_elo) if game.winner==player else float(game.loser_elo)
         data.append(point)
+    data.append({'x': len(player.games), 'y': float(player.elo)})
     return HttpResponse(json.dumps(data, indent=4, sort_keys=True, separators=(',', ': ')), content_type='application/json')

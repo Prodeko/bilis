@@ -75,15 +75,20 @@ class Game(models.Model):
     def __str__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
     def save(self, *args, **kwargs):
-        #TODO: implement rating calculation here
-        winner_elo = self.winner.elo
-        loser_elo = self.loser.elo
-        self.winner.update_rating(loser_elo, 1)
-        self.loser.update_rating(winner_elo, 0)
-        if(self.datetime is None):
-            self.datetime = datetime.now()
-        self.winner_elo = self.winner.elo
-        self.loser_elo = self.loser.elo
-        self.winner_fargo = self.winner.fargo
-        self.loser_fargo = self.loser.fargo
+        if self.pk is None:
+            if Game.objects.count() > 0:
+                game = Game.objects.latest('datetime')
+                if(game.deleted):
+                    game.delete()
+            winner_elo = self.winner.elo
+            loser_elo = self.loser.elo
+            self.winner_elo = self.winner.elo
+            self.loser_elo = self.loser.elo
+            self.winner_fargo = self.winner.fargo
+            self.loser_fargo = self.loser.fargo
+            self.winner.update_rating(loser_elo, 1)
+            self.loser.update_rating(winner_elo, 0)
+            if(self.datetime is None):
+                self.datetime = datetime.now()
+        
         super(Game, self).save(*args, **kwargs)

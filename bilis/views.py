@@ -14,7 +14,10 @@ def index(request):
     form = ResultForm()
     players = Player.objects.all().order_by('-elo')[:20]
     latest_games = Game.objects.filter(deleted=False).order_by('-datetime')[:20]
-    allow_delete = not Game.objects.latest('datetime').deleted
+    if Game.objects.count() > 0:
+        allow_delete = not Game.objects.latest('datetime').deleted
+    else: 
+        allow_delete = False
     return render_to_response('index.html',{
                 'form': form,
                 'players': players,
@@ -42,6 +45,12 @@ def delete_last_result(request):
     game = Game.objects.latest('datetime')
     game.deleted = True
     game.save()
+    game.winner.elo = game.winner_elo
+    game.loser.elo = game.loser_elo
+    game.winner.fargo = game.winner_fargo
+    game.loser.fargo = game.loser_fargo
+    game.winner.save()
+    game.loser.save()
     return redirect('bilis.views.index')
 
 def new_player(request):
