@@ -71,6 +71,7 @@ class Game(models.Model):
     datetime = models.DateTimeField()
     under_table = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
+    deleted = models.BooleanField(default=False)
     def __str__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
     def save(self, *args, **kwargs):

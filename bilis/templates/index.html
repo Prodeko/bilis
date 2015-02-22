@@ -68,7 +68,7 @@
     <div class="row">
 		<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
             <div class="col-sm-8 col-sm-offset-2">
-				<a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal"
+				<a href="#" class="{% if not allow_delete %}disabled {% endif %} btn btn-default btn-sm btn-block" data-toggle="modal"
 					data-target="#deleteModal">Poista viimeisin</a>
           
             </div>
@@ -82,7 +82,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">Poistetaanko viimeisin peli?</h4>
             </div>
-            <div class="modal-footer">
+            <div class="modal-content">
                 <a href="{% url 'remove' %}" class="btn btn-default btn-sm btn-block">Poista</a>
         </div>
     </div>

@@ -13,11 +13,13 @@ import json
 def index(request):
     form = ResultForm()
     players = Player.objects.all().order_by('-elo')[:20]
-    latest_games = Game.objects.all().order_by('-datetime')[:20]
+    latest_games = Game.objects.filter(deleted=False).order_by('-datetime')[:20]
+    allow_delete = not Game.objects.latest('datetime').deleted
     return render_to_response('index.html',{
                 'form': form,
                 'players': players,
-                'latest_games' : latest_games
+                'latest_games' : latest_games,
+                'allow_delete' : allow_delete
         }, context_instance=RequestContext(request))
 
 def add_result(request):
@@ -38,7 +40,8 @@ def add_result(request):
 	
 def delete_last_result(request):
     game = Game.objects.latest('datetime')
-    game.delete()
+    game.deleted = True
+    game.save()
     return redirect('bilis.views.index')
 
 def new_player(request):
@@ -74,7 +77,7 @@ def player(request, player):
         }, context_instance=RequestContext(request))
 
 def games(request):
-    games = Game.objects.all().order_by('-datetime')
+    games = Game.objects.filter(deleted=False).order_by('-datetime')
     return render_to_response('games.html', {
                 'games': games
     }, context_instance=RequestContext(request))
