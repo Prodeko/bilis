@@ -29,8 +29,9 @@ def games(request):
     for game in games:
         item = {}
         item['datetime'] = game.datetime.strftime("%d.%m.%y %H:%m")
-        item['winner'] = escape(game.winner.name)
-        item['loser'] = escape(game.loser.name)
+        item['winner'] = "<a href='/player/" + str(game.winner.pk) + "/' >" + escape(game.winner.name) + "</a>"
+        item['loser'] = "<a href='/player/" + str(game.loser.pk) + "/' >" + escape(game.loser.name) + "</a>"
+        
         rows.append(item)
     total = Game.objects.count()
     struct['total'] = total
@@ -62,7 +63,7 @@ def players(request):
     for i,player in enumerate(players):
         item = {}
         item['position'] = player.position
-        item['name'] = escape(player.name)
+        item['name'] = "<a href='/player/" + str(player.pk) + "/' >" + escape(player.name) + "</a>"
         item['elo'] = str(player.elo)
         item['games'] = len(player.games)
         item['won_games'] = player.won_games.count()
