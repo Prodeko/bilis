@@ -52,10 +52,10 @@ def players(request):
     else:
         sort = MySQLdb.escape_string(sort)
     if(search is None):
-        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.elo>x.elo) as position from bilis_player as x order by {} {}".format(sort, order))[offset:offset+limit]
+        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.{}>x.{}) as position from bilis_player as x order by {} {}".format("fargo", "fargo", sort, order))[offset:offset+limit] #TODO: fiksaa
     else:
         search = MySQLdb.escape_string(search)
-        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.elo>x.elo) as position from bilis_player as x where first_name like %s or last_name like %s order by {} {}".format(sort, order), ['%'+search+'%', '%'+search+'%'])[offset:offset+limit]
+        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.{}>x.{}) as position from bilis_player as x where first_name like %s or last_name like %s order by {} {}".format("fargo", "fargo", sort, order), ['%'+search+'%', '%'+search+'%'])[offset:offset+limit]
 
     struct = {}
     rows = []
@@ -63,7 +63,7 @@ def players(request):
         item = {}
         item['position'] = player.position
         item['name'] = "<a href='/player/" + str(player.pk) + "/' >" + escape(player.name) + "</a>"
-        item['elo'] = str(player.elo)
+        item['rating'] = str(player.get_rating("fargo")) #TODO: ei kovakoodaa
         item['games'] = len(player.games)
         item['won_games'] = player.won_games.count()
         item['lost_games'] = player.lost_games.count()
@@ -80,7 +80,7 @@ def rating_time_series(request, player):
     for i, game in enumerate(reversed(player.games)): #this is a bit hacky, should rethink the API
         point = {}
         point['x'] = i
-        point['y'] = float(game.winner_elo) if game.winner==player else float(game.loser_elo)
+        point['y'] = float(game.get_winner_rating("fargo")) if game.winner==player else float(game.get_loser_rating("fargo"))
         data.append(point)
-    data.append({'x': len(player.games), 'y': float(player.elo)})
+    data.append({'x': len(player.games), 'y': float(player.get_rating("fargo"))})
     return HttpResponse(json.dumps(data, indent=4, sort_keys=True, separators=(',', ': ')), content_type='application/json')

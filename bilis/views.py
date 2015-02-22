@@ -12,7 +12,7 @@ import json
 
 def index(request):
     form = ResultForm()
-    players = Player.objects.all().order_by('-elo')[:20]
+    players = Player.objects.all().order_by('-fargo')[:20] #TODO: fix
     latest_games = Game.objects.filter(deleted=False).order_by('-datetime')[:20]
     if Game.objects.count() > 0:
         allow_delete = not Game.objects.latest('datetime').deleted
@@ -32,12 +32,17 @@ def add_result(request):
             form.save()
             return redirect('bilis.views.index')
         else:
-            players = Player.objects.all().order_by('-elo')[:20]
+            players = Player.objects.all().order_by('-fargo')[:20] #TODO: korjaa eri rankingit
             latest_games = Game.objects.all().order_by('-datetime')[:20]
+            if Game.objects.count() > 0:
+                allow_delete = not Game.objects.latest('datetime').deleted
+            else: 
+                allow_delete = False
             return render_to_response('index.html',{
                  'form': form,
                  'players': players,
-                 'latest_games' : latest_games
+                 'latest_games' : latest_games,
+                 'allow_delete' : allow_delete
                  }, context_instance=RequestContext(request))
     return redirect('bilis.views.index')
 	
@@ -74,7 +79,7 @@ def delete_player(request, player):
     return redirect('bilis.views.index')
 
 def players(request):
-    players = Player.objects.all().order_by('-elo')
+    players = Player.objects.all().order_by('-fargo')  #TODO: korjaa vaihtoehto
     return render_to_response('players.html',{
                 'players': players
         }, context_instance=RequestContext(request))

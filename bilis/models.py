@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.db.models.signals import post_save
 from bilis import utils
+import math
 
 class Player(models.Model):
     first_name = models.CharField(max_length=50)
@@ -22,12 +23,20 @@ class Player(models.Model):
     def _get_games_count(self):
         return self.won_games.count() + self.lost_games.count()
     games_count = property(_get_games_count)
+    def _get_victory_percent(self):
+        return self.won_games.count() / self._get_games_count()
+    
     def __str__(self):
         return "#{id} {name}".format(id=self.pk, name= self.name)
+    def get_rating(self, type):
+        if type == "elo":
+            return self.elo
+        else:
+            return self.fargo
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.elo = 100
-            self.fargo = 100
+            self.fargo = 400
         super(Player, self).save(*args, **kwargs)
     def update_rating(self, opponent_rating, result):
         if(result>0):
@@ -41,7 +50,7 @@ class Player(models.Model):
 
     def update_rating_fargo(self, opponent_rating, opponent_games, result):
 
-        if (self.games>50): 
+        if (len(self.games)>50): 
             self_robust = math.log(self.games,1.01029)-332.268
         else:
             self_robust = 50
@@ -53,9 +62,11 @@ class Player(models.Model):
 
 
         if (result>0):
-            change = 630*(1-(1/(1+math.pow(2,((opponent_rating-self_rating)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
+            change = 630*(1-(1/(1+math.pow(2,((opponent_rating-self.fargo)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
         else:
-            change = 630*(0-(1/(1+math.pow(2,((opponent_rating-self_rating)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
+            change = 630*(0-(1/(1+math.pow(2,((opponent_rating-self.fargo)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
+        self.fargo = float(self.fargo) + float(change)
+        self.save()
         return change
 
     class Meta:
@@ -72,6 +83,10 @@ class Game(models.Model):
     under_table = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
     deleted = models.BooleanField(default=False)
+    def get_winner_rating(self, type):
+        return self.winner_elo if type == "elo" else self.winner_fargo
+    def get_loser_rating(self, type):
+        return self.loser_elo if type == "elo" else self.loser_fargo
     def __str__(self):
         return self.winner.name + " vs. " + self.loser.name + " " + self.datetime.strftime("%Y-%m-%d")
     def save(self, *args, **kwargs):
@@ -82,12 +97,16 @@ class Game(models.Model):
                     game.delete()
             winner_elo = self.winner.elo
             loser_elo = self.loser.elo
+            winner_fargo = self.winner.fargo
+            loser_fargo = self.loser.fargo
             self.winner_elo = self.winner.elo
             self.loser_elo = self.loser.elo
             self.winner_fargo = self.winner.fargo
             self.loser_fargo = self.loser.fargo
             self.winner.update_rating(loser_elo, 1)
             self.loser.update_rating(winner_elo, 0)
+            self.winner.update_rating_fargo(loser_fargo, self.loser.games_count, 1)
+            self.loser.update_rating_fargo(winner_fargo, self.winner.games_count, 0)
             if(self.datetime is None):
                 self.datetime = datetime.now()
         
