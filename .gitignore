@@ -9,3 +9,4 @@
 /bilis/compiled/
 *.csv
 /bilis/static/uploads/
+.DS_Store
