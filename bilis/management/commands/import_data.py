@@ -30,7 +30,7 @@ class Command(BaseCommand):
             elo = 100
             fargo = 400
             print (id)
-            p = Player.objects.create(pk=id, first_name=first_name, last_name=last_name, elo=elo, fargo=fargo, favorite_color=random.randint(0,16711680))
+            p = Player.objects.create(pk=id, first_name=first_name, last_name=last_name, elo=elo, fargo=fargo, favorite_color=randint(0,16711680))
             p.save()
 
     def import_games(self, filename='bilis_games.csv'):
