@@ -27,8 +27,9 @@ class Command(BaseCommand):
             last_name = " ".join(row['name'].split(' ')[1:])
             id = row['id']
             elo = 100
+            fargo = 400
             print (id)
-            p = Player.objects.create(pk=id, first_name=first_name, last_name=last_name, elo=elo, fargo=elo)
+            p = Player.objects.create(pk=id, first_name=first_name, last_name=last_name, elo=elo, fargo=fargo)
             p.save()
 
     def import_games(self, filename='bilis_games.csv'):
