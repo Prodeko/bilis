@@ -4,6 +4,10 @@
   <h1>Pelaaja: {{ player.name }}</h1>
   <p>Fargo-rating: <b>{{ player.fargo }}</b></p>
   <p>ELO-rating: <b>{{ player.elo }}</b></p>
+  <p>Pelit: <b>{{ player.games_count }}</b></p>
+  <p>Voittoprosentti: <b>{{ player.get_victory_percent }}</b></p>
+  
+  
   
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>

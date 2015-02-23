@@ -48,7 +48,7 @@ def players(request):
     if(sort=='name'):
         sort='last_name'
     if(sort is None):
-        sort = 'last_name'
+        sort = '-fargo'
     else:
         sort = MySQLdb.escape_string(sort)
     if(search is None):
@@ -73,6 +73,8 @@ def players(request):
     struct['rows'] = rows
     return HttpResponse(json.dumps(struct, sort_keys=True,
                         indent=4, separators=(',',': ')), content_type='application/json')
+
+
 
 def rating_time_series(request, player):
     player = get_object_or_404(Player, pk=player)

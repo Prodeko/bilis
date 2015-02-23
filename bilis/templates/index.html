@@ -125,9 +125,9 @@
           <tbody>
             {% for game in latest_games %}
             <tr>
-              <td>{{ game.datetime | date:"H.i"  }}</td>
+              <td>{{ game.datetime | date:"d.m. H:i"  }}</td>
               <td><a href="{% url 'player' game.winner.pk %}">{{ game.winner.name }}</a></td>
-              <td><a href="{% url 'player' game.loser.pk %}">{{ game.loser.name }}</a></td>
+              <td><a href="{% url 'player' game.loser.pk %}">{{ game.loser.name }}</a> {% if game.under_table %}<img src="/">{% endif %}</td>
             </tr>
             {% endfor %}
           </tbody>
