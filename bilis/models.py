@@ -51,7 +51,7 @@ class Player(models.Model):
     def update_rating_fargo(self, opponent_rating, opponent_games, result):
 
         if (len(self.games)>50): 
-            self_robust = math.log(self.games,1.01029)-332.268
+            self_robust = math.log(len(self.games),1.01029)-332.268
         else:
             self_robust = 50
         
