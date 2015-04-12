@@ -25,7 +25,8 @@ class Player(models.Model):
         return self.won_games.count() + self.lost_games.count()
     games_count = property(_get_games_count)
     def get_victory_percent(self):
-        return '{:.2%}'.format(self.won_games.count() / self._get_games_count())
+        if self._get_games_count() > 0:
+            return '{:.2%}'.format(self.won_games.count() / self._get_games_count())
     
     def __str__(self):
         return "#{id} {name}".format(id=self.pk, name= self.name)
