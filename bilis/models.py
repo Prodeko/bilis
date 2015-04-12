@@ -43,7 +43,7 @@ class Player(models.Model):
         if won_games_min['winner_fargo__min'] < lost_games_min['loser_fargo__min']:
             min_rating = won_games_min['winner_fargo__min']
         else:
-            min_rating = lost_games_min['looser_fargo__min']
+            min_rating = lost_games_min['loser_fargo__min']
         return min_rating
     
     def games_per_day(self):
@@ -55,7 +55,7 @@ class Player(models.Model):
             first_date = lost_games_first_date
         
         days_since_first_game = datetime.now().date() - first_date.date() + timedelta(1)
-        return self._get_games_count() / days_since_first_game.days
+        return '{:.2}'.format(self._get_games_count() / days_since_first_game.days)
     
     
     def __str__(self):
