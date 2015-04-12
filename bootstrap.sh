@@ -96,6 +96,7 @@ pip install -r /vagrant/requirements.txt
 # tasks
 cd /vagrant && python manage.py syncdb --noinput
 cd /vagrant && python manage.py migrate
+cd /vagrant && python manage.py createcachetable bilis_cache
 
 # Run server and static file watcher in screen
 su - vagrant -c "cd /vagrant && screen -S server -d -m python manage.py runserver 0.0.0.0:8000"
