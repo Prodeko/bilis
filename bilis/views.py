@@ -44,7 +44,7 @@ def add_result(request):
                  'allow_delete' : allow_delete
                  }, context_instance=RequestContext(request))
     return redirect('bilis.views.index')
-	
+    
 def delete_last_result(request):
     game = Game.objects.latest('datetime')
     game.deleted = True
