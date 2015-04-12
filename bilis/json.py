@@ -29,7 +29,7 @@ def games(request):
     rows = []
     for game in games:
         item = {}
-        item['datetime'] = game.datetime.strftime("%d.%m.%y %H:%m")
+        item['datetime'] = game.datetime.strftime("%d.%m.%y %H:%M")
         item['winner'] = "<a href='/player/" + str(game.winner.pk) + "/' >" + escape(game.winner.name) + "</a>" + (" <img src='{{ static  }}'>" if game.under_table else "")
         item['loser'] =  "<a href='/player/" + str(game.loser.pk) + "/' >" + escape(game.loser.name) + "</a>"
         rows.append(item)
