@@ -86,10 +86,25 @@ def players(request):
 
 def player(request, player):
     player = get_object_or_404(Player, pk=player)
+    players = Player.objects.all().order_by('-fargo')  #TODO: korjaa vaihtoehto
     return render_to_response('player.html',{
-                'player': player
+                'player': player,
+                'players': players
         }, context_instance=RequestContext(request))
 
+
+def comparison(request, player1, player2):
+    p1 = get_object_or_404(Player, pk=player1)
+    p2 = get_object_or_404(Player, pk=player2)
+    wins = Game.objects.filter(winner__pk = player1).filter(loser__pk = player2).count()
+    loses = Game.objects.filter(winner__pk = player2).filter(loser__pk = player1).count()
+    return render_to_response('comparison.html',{
+                'player1': p1,
+                'player2': p2,
+                'wins': wins,
+                'loses': loses
+        }, context_instance=RequestContext(request))
+        
 def games(request):
     games = Game.objects.filter(deleted=False).order_by('-datetime')
     return render_to_response('games.html', {

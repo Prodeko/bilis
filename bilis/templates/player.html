@@ -1,19 +1,50 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <h1>Pelaaja: {{ player.name }}</h1>
-  <p>Fargo-rating: <b>{{ player.fargo }}</b></p>
-  <!--<p>ELO-rating: <b>{{ player.elo }}</b></p>-->
-  <p>Pelit: <b>{{ player.games_count }}</b></p>
-  <p>Voittoprosentti: <b>{{ player.get_victory_percent }}</b></p>
-  <p>Max rating: {{ player.get_max_rating}}</p>
-  <p>Min rating: {{ player.get_min_rating}}</p>
-  <p>Peliä/vuorokausi: {{ player.games_per_day }}</p>
-  <p>Pisin voittoputki:</p>
-  <p>Lempiväri:</p>
-  
-  
 
+<script>
+    $(document).ready(function() { 
+        $("#compare").select2({ width: '100%' });
+        $test = $("#compare")
+        $test.on("change", function(e) {
+                $('#comparison_area').load('../comparison/{{player.pk}}/' + e.val +'/')})
+    })
+    
+</script>
+
+
+
+
+<div class="col-md-6">
+  <h1>{{ player.name }}</h1>
+  <div class="table-responsive">
+    <table class="table">
+        <tr>
+            <td>Fargo-rating</td><td>{{ player.fargo }}</td>
+        </tr>
+        <tr>
+            <td>Pelit</td><td>{{ player.games_count }}</td>
+        </tr>
+        <tr>
+            <td>Voittoprosentti</td><td>{{ player.get_victory_percent }}</td>
+        </tr>
+        <tr>
+            <td>Maksimipisteytys</td><td>{{ player.get_max_rating}}</td>
+        </tr>
+        <tr>
+            <td>Minimipisteytys</td><td>{{ player.get_min_rating}}</td>
+        </tr>
+        <tr>
+            <td>Pelit/vuorokausi</td><td>{{ player.games_per_day }}</td>
+        </tr>
+    </table>
+  </div>
+
+  
+  <br>
+
+  
+   
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <svg id="visualization" width="500" height="300"></svg>
 
@@ -94,5 +125,18 @@
   }
 
 </script>  
+</div>
+    
+<div class="col-md-6">
+    <p>Vertaa pelaajaan:<p>
+      <select id="compare">
+        {% for p in players %}
+            {%if p.pk != player.pk%}
+                <option value="{{p.pk}}">{{ p }}</option>
+            {% endif %}
+        {% endfor %}
+      </select>
+      <div id="comparison_area"></div>
   
+</div>
 {% endblock %}

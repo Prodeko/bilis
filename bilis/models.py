@@ -31,28 +31,48 @@ class Player(models.Model):
             return '{:.2%}'.format(0.0)
     
     def get_max_rating(self):
-        won_games_max = self.won_games.all().aggregate(models.Max('winner_fargo'))
-        lost_games_max = self.lost_games.all().aggregate(models.Max('loser_fargo'))
-        if won_games_max['winner_fargo__max'] > lost_games_max['loser_fargo__max']:
-            max_rating = won_games_max['winner_fargo__max']
+        if self.won_games.exists():
+            won_games_max = self.won_games.all().aggregate(models.Max('winner_fargo'))['winner_fargo__max']
         else:
-            max_rating = lost_games_max['loser_fargo__max']
-        return max_rating
+            won_games_max = 400
+        if self.lost_games.exists():
+            lost_games_max = self.lost_games.all().aggregate(models.Max('loser_fargo'))['loser_fargo__max']
+        else:
+            lost_games_max = 400
+        if won_games_max > lost_games_max:
+            max_rating = won_games_max
+        else:
+            max_rating = lost_games_max
+        return max(max_rating, 400)
     
     def get_min_rating(self):
-        won_games_min = self.won_games.all().aggregate(models.Min('winner_fargo'))
-        lost_games_min = self.lost_games.all().aggregate(models.Min('loser_fargo'))
-        if won_games_min['winner_fargo__min'] < lost_games_min['loser_fargo__min']:
-            min_rating = won_games_min['winner_fargo__min']
+        if self.won_games.exists():
+            won_games_min = self.won_games.all().aggregate(models.Max('winner_fargo'))['winner_fargo__max']
         else:
-            min_rating = lost_games_min['loser_fargo__min']
-        return min_rating
+            won_games_min = 400
+        if self.lost_games.exists():
+            lost_games_min = self.lost_games.all().aggregate(models.Max('loser_fargo'))['loser_fargo__max']
+        else:
+            lost_games_min = 400
+        if won_games_min < lost_games_min:
+            min_rating = won_games_min
+        else:
+            min_rating = lost_games_min
+        return min(min_rating, 400)
     
     def games_per_day(self):
-        won_games_first_date = self.won_games.all().aggregate(models.Min('datetime'))['datetime__min']
-        lost_games_first_date = self.lost_games.all().aggregate(models.Min('datetime'))['datetime__min']
-        won_games_last_date = self.won_games.all().aggregate(models.Max('datetime'))['datetime__max']
-        lost_games_last_date = self.lost_games.all().aggregate(models.Max('datetime'))['datetime__max']
+        if self.won_games.exists():
+            won_games_first_date = self.won_games.all().aggregate(models.Min('datetime'))['datetime__min']
+            won_games_last_date = self.won_games.all().aggregate(models.Max('datetime'))['datetime__max']
+        else:
+            won_games_first_date = won_games_last_date = datetime.now()
+        if self.lost_games.exists():
+            lost_games_first_date = self.lost_games.all().aggregate(models.Min('datetime'))['datetime__min']
+            lost_games_last_date = self.lost_games.all().aggregate(models.Max('datetime'))['datetime__max']
+        else:
+            lost_games_first_date = lost_games_last_date = datetime.now()
+        
+        
         if won_games_first_date < lost_games_first_date:
             first_date = won_games_first_date
         else:

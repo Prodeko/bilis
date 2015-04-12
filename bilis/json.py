@@ -87,3 +87,6 @@ def rating_time_series(request, player):
         data.append(point)
     data.append({'x': len(player.games), 'y': float(player.get_rating("fargo"))})
     return HttpResponse(json.dumps(data, indent=4, sort_keys=True, separators=(',', ': ')), content_type='application/json')
+
+    
+    
