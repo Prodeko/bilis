@@ -1,5 +1,5 @@
-from datetime import datetime
 from django.core.urlresolvers import reverse
+from datetime import datetime, timedelta
 from django.db import models
 from django.db.models.signals import post_save
 from bilis import utils
@@ -27,6 +27,36 @@ class Player(models.Model):
     def get_victory_percent(self):
         if self._get_games_count() > 0:
             return '{:.2%}'.format(self.won_games.count() / self._get_games_count())
+    
+    def get_max_rating(self):
+        won_games_max = self.won_games.all().aggregate(models.Max('winner_fargo'))
+        lost_games_max = self.lost_games.all().aggregate(models.Max('loser_fargo'))
+        if won_games_max['winner_fargo__max'] > lost_games_max['loser_fargo__max']:
+            max_rating = won_games_max['winner_fargo__max']
+        else:
+            max_rating = lost_games_max['loser_fargo__max']
+        return max_rating
+    
+    def get_min_rating(self):
+        won_games_min = self.won_games.all().aggregate(models.Min('winner_fargo'))
+        lost_games_min = self.lost_games.all().aggregate(models.Min('loser_fargo'))
+        if won_games_min['winner_fargo__min'] < lost_games_min['loser_fargo__min']:
+            min_rating = won_games_min['winner_fargo__min']
+        else:
+            min_rating = lost_games_min['looser_fargo__min']
+        return min_rating
+    
+    def games_per_day(self):
+        won_games_first_date = self.won_games.all().aggregate(models.Min('datetime'))['datetime__min']
+        lost_games_first_date = self.lost_games.all().aggregate(models.Min('datetime'))['datetime__min']
+        if won_games_first_date < lost_games_first_date:
+            first_date = won_games_first_date
+        else:
+            first_date = lost_games_first_date
+        
+        days_since_first_game = datetime.now().date() - first_date.date() + timedelta(1)
+        return self._get_games_count() / days_since_first_game.days
+    
     
     def __str__(self):
         return "#{id} {name}".format(id=self.pk, name= self.name)
