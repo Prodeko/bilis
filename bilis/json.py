@@ -4,6 +4,7 @@ import MySQLdb
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.html import escape
+from django.views.decorators.cache import cache_page
 from bilis.models import Player, Game
 
 def games(request):
@@ -75,7 +76,7 @@ def players(request):
                         indent=4, separators=(',',': ')), content_type='application/json')
 
 
-
+@cache_page(60*60*24*30)
 def rating_time_series(request, player):
     player = get_object_or_404(Player, pk=player)
     data = []

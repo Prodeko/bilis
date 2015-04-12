@@ -1,3 +1,7 @@
+from django.core.cache import cache
+from django.http import HttpRequest
+from django.utils.cache import get_cache_key
+
 def html_color_to_int(color):
     #strip possible leading hash symbol
     if not is_hex(color[0]):
@@ -14,3 +18,10 @@ def is_hex(x):
         return True
     except ValueError:
         return False
+
+def expire_cache(path):
+    request = HttpRequest()
+    request.path = path
+    key = get_cache_key(request)
+    if cache.has_key(key):
+        cache.delete(key)

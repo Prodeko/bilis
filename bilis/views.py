@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response, redirect, render
 from django.forms import ModelForm
 from django.conf import settings
 from django.core.management import call_command
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
@@ -30,6 +31,10 @@ def add_result(request):
         form = ResultForm(request.POST)
         if form.is_valid():
             form.save()
+            winner_url = reverse('bilis.json.rating_time_series', kwargs={'player': form.data['winner']})
+            loser_url = reverse('bilis.json.rating_time_series', kwargs={'player': form.data['loser']})
+            utils.expire_cache(winner_url)
+            utils.expire_cache(loser_url)
             return redirect('bilis.views.index')
         else:
             players = Player.objects.all().order_by('-fargo')[:20] #TODO: korjaa eri rankingit
