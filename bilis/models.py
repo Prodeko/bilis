@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
 from bilis import utils
@@ -67,6 +68,8 @@ class Player(models.Model):
             change = 630*(0-(1/(1+math.pow(2,((opponent_rating-self.fargo)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
         self.fargo = float(self.fargo) + float(change)
         self.save()
+        url = reverse('bilis.json.rating_time_series', kwargs={'player': self.pk})
+        utils.expire_cache(url)
         return change
 
     class Meta:
