@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from bilis.models import Player, Game
 from bilis.forms import PlayerForm, ResultForm, ImageUploadForm
+from bilis import utils
 import json
 
 def index(request):
