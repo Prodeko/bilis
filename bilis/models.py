@@ -51,13 +51,18 @@ class Player(models.Model):
     def games_per_day(self):
         won_games_first_date = self.won_games.all().aggregate(models.Min('datetime'))['datetime__min']
         lost_games_first_date = self.lost_games.all().aggregate(models.Min('datetime'))['datetime__min']
+        won_games_last_date = self.won_games.all().aggregate(models.Max('datetime'))['datetime__max']
+        lost_games_last_date = self.lost_games.all().aggregate(models.Max('datetime'))['datetime__max']
         if won_games_first_date < lost_games_first_date:
             first_date = won_games_first_date
         else:
             first_date = lost_games_first_date
-        
-        days_since_first_game = datetime.now().date() - first_date.date() + timedelta(1)
-        return '{:.2}'.format(self._get_games_count() / days_since_first_game.days)
+        if won_games_last_date < lost_games_last_date:
+            last_date = won_games_last_date
+        else:
+            last_date = lost_games_last_date
+        days_between_first_and_last = last_date.date() - first_date.date() + timedelta(1)
+        return '{:.2}'.format(self._get_games_count() / days_between_first_and_last)
     
     
     def __str__(self):
