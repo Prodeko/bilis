@@ -27,6 +27,8 @@ class Player(models.Model):
     def get_victory_percent(self):
         if self._get_games_count() > 0:
             return '{:.2%}'.format(self.won_games.count() / self._get_games_count())
+        else:
+            return '{:.2%}'.format(0.0)
     
     def get_max_rating(self):
         won_games_max = self.won_games.all().aggregate(models.Max('winner_fargo'))
