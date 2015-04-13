@@ -1,61 +1,51 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Player'
-        db.create_table('bilis_player', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('rating', self.gf('django.db.models.fields.IntegerField')()),
-            ('live_rating', self.gf('django.db.models.fields.IntegerField')()),
-            ('favorite_color', self.gf('django.db.models.fields.IntegerField')(default=16711680)),
-        ))
-        db.send_create_signal('bilis', ['Player'])
+    dependencies = [
+    ]
 
-        # Adding model 'Game'
-        db.create_table('bilis_game', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('winner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='won_games', to=orm['bilis.Player'])),
-            ('loser', self.gf('django.db.models.fields.related.ForeignKey')(related_name='lost_games', to=orm['bilis.Player'])),
-            ('datetime', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('under_table', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('notes', self.gf('django.db.models.fields.TextField')(blank=True)),
-        ))
-        db.send_create_signal('bilis', ['Game'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Player'
-        db.delete_table('bilis_player')
-
-        # Deleting model 'Game'
-        db.delete_table('bilis_game')
-
-
-    models = {
-        'bilis.game': {
-            'Meta': {'object_name': 'Game'},
-            'datetime': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'loser': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'lost_games'", 'to': "orm['bilis.Player']"}),
-            'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'under_table': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'winner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'won_games'", 'to': "orm['bilis.Player']"})
-        },
-        'bilis.player': {
-            'Meta': {'object_name': 'Player'},
-            'favorite_color': ('django.db.models.fields.IntegerField', [], {'default': '16711680'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'live_rating': ('django.db.models.fields.IntegerField', [], {}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'rating': ('django.db.models.fields.IntegerField', [], {})
-        }
-    }
-
-    complete_apps = ['bilis']
+    operations = [
+        migrations.CreateModel(
+            name='Game',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('winner_elo', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('winner_fargo', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('loser_elo', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('loser_fargo', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('datetime', models.DateTimeField()),
+                ('under_table', models.BooleanField(default=False)),
+                ('notes', models.TextField(blank=True)),
+                ('deleted', models.BooleanField(default=False)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Player',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('first_name', models.CharField(max_length=50)),
+                ('last_name', models.CharField(max_length=50)),
+                ('elo', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('fargo', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('favorite_color', models.IntegerField(default=16711680)),
+            ],
+            options={
+                'ordering': ['last_name', 'first_name'],
+            },
+        ),
+        migrations.AddField(
+            model_name='game',
+            name='loser',
+            field=models.ForeignKey(related_name='lost_games', to='bilis.Player'),
+        ),
+        migrations.AddField(
+            model_name='game',
+            name='winner',
+            field=models.ForeignKey(related_name='won_games', to='bilis.Player'),
+        ),
+    ]
