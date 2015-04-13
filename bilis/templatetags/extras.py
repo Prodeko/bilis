@@ -16,7 +16,6 @@ class ImageNode(template.Node):
 
     def render(self, context):
         self.path = self.path.replace("'","").replace("\"", "")
-        print(self.path)
         if(os.path.isfile(settings.STATIC_ROOT + self.path)):
             return self.build_html(settings.STATIC_URL + self.path)
         else:
