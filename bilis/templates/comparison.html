@@ -1,0 +1,91 @@
+{% block body %}
+
+
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <td>{{ player2.fargo }}</td>
+        </tr>
+        <tr>
+            <td>{{ player2.games_count }}</td>
+        </tr>
+        <tr>
+            <td>{{ player2.get_victory_percent }}</td>
+        </tr>
+        <tr>
+            <td>{{ player2.get_max_rating}}</td>
+        </tr>
+        <tr>
+            <td>{{ player2.get_min_rating}}</td>
+        </tr>
+        <tr>
+            <td>{{ player2.games_per_day }}</td>
+        </tr>
+    </table>
+</div>
+<h3>Keskinäiset pelit</h3>
+{{player1.first_name}}: {{wins}}<br>
+{{player2.first_name}}: {{loses}}<br>
+
+<canvas id="comparison_pie" width="400" height="400">
+browser does not support html5
+</canvas>
+<script type="text/javascript">
+c = document.getElementById("comparison_pie");
+ctx = c.getContext("2d");
+
+function drawPie(name1, name2, percent, color1, color2){
+    console.log(name1, name2, percent, color1, color2)
+    w = c.width;
+    h = c.height;
+    r = 0.7 * w/2;
+
+    ctx.setTransform( 1, 0, 0, 1, 0, 0);
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(w/2, h/2);
+    ctx.lineTo(w/2, h/2 - r);
+    
+    ctx.arc(w / 2, h/2, r, Math.PI * -0.5, Math.PI * -0.5 + percent * Math.PI*2);
+    
+    ctx.closePath();
+    ctx.fillStyle = color1;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w / 2, h/2, r, Math.PI * -0.5, Math.PI * -0.5 + percent * Math.PI*2);
+    ctx.stroke();
+
+    console.log("bleh")
+    
+    ctx.beginPath();
+    ctx.moveTo(w/2, h/2);
+    ctx.lineTo(w/2, h/2 - r);
+
+    ctx.arc(w / 2, h/2, r, Math.PI * -0.5, Math.PI * 1.5 + percent * Math.PI*2, true);
+    
+    ctx.closePath();
+    ctx.fillStyle = color2;
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+
+    ctx.translate(w/2, h/2);
+    ctx.rotate(percent*Math.PI - Math.PI/2);
+    ctx.fillStyle = "black";
+    
+    ctx.lineWidth = 1;
+    ctx.font = "30px sans-serif";
+    ctx.fillText(name1, r/2, 0);
+    ctx.strokeText(name1, r/2, 0);
+    ctx.fillText(name2, -r/2, 0);
+    ctx.strokeText(name2, -r/2, 0);
+}
+
+drawPie("{{player1.first_name}}", "{{player2.first_name}}", {{wins}} / ({{wins}} + {{loses}}), "{{player1.favorite_color_string}}", "{{player2.favorite_color_string}}")
+</script>
+
+
+{% endblock %}
