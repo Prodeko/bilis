@@ -1,7 +1,9 @@
 from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
+from django.core.cache import cache
 from django.db import models
 from django.db.models.signals import post_save
+from django.utils import timezone
 from bilis import utils
 import math
 
@@ -71,9 +73,8 @@ class Player(models.Model):
             lost_games_first_date = self.lost_games.all().aggregate(models.Min('datetime'))['datetime__min']
             lost_games_last_date = self.lost_games.all().aggregate(models.Max('datetime'))['datetime__max']
         else:
-            lost_games_first_date = datetime.now()
-            lost_games_last_date = datetime.now()
-        
+            lost_games_first_date = timezone.now()
+            lost_games_last_date = timezone.now()
         if won_games_first_date < lost_games_first_date:
             first_date = won_games_first_date
         else:
@@ -127,8 +128,7 @@ class Player(models.Model):
             change = 630*(0-(1/(1+math.pow(2,((opponent_rating-self.fargo)/100)))))*((opponent_robust-1)/(self_robust*opponent_robust))
         self.fargo = float(self.fargo) + float(change)
         self.save()
-        url = reverse('bilis.json.rating_time_series', kwargs={'player': self.pk})
-        utils.expire_cache(url)
+        cache.delete('fargo_series_' + str(self.pk))
         return change
 
     class Meta:

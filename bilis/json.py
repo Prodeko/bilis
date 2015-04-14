@@ -1,6 +1,7 @@
 import json
 import datetime
 import MySQLdb
+from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.html import escape
@@ -76,16 +77,18 @@ def players(request):
                         indent=4, separators=(',',': ')), content_type='application/json')
 
 
-@cache_page(60*60*24*30)
 def rating_time_series(request, player):
     player = get_object_or_404(Player, pk=player)
-    data = []
-    for i, game in enumerate(reversed(player.games)): #this is a bit hacky, should rethink the API
-        point = {}
-        point['x'] = i
-        point['y'] = float(game.get_winner_rating("fargo")) if game.winner==player else float(game.get_loser_rating("fargo"))
-        data.append(point)
-    data.append({'x': len(player.games), 'y': float(player.get_rating("fargo"))})
+    data = cache.get('fargo_series_' + str(player.pk))
+    if data is None:
+      data = []
+      for i, game in enumerate(reversed(player.games)): #this is a bit hacky, should rethink the API
+          point = {}
+          point['x'] = i
+          point['y'] = float(game.get_winner_rating("fargo")) if game.winner==player else float(game.get_loser_rating("fargo"))
+          data.append(point)
+      data.append({'x': len(player.games), 'y': float(player.get_rating("fargo"))})
+      cache.set('fargo_series_' + str(player.pk), data, timeout=None)
     return HttpResponse(json.dumps(data, indent=4, sort_keys=True, separators=(',', ': ')), content_type='application/json')
 
     
