@@ -18,10 +18,3 @@ def is_hex(x):
         return True
     except ValueError:
         return False
-
-def expire_cache(path):
-    request = HttpRequest()
-    request.path = path
-    key = get_cache_key(request)
-    if cache.has_key(key):
-        cache.delete(key)
