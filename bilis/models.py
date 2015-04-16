@@ -97,7 +97,7 @@ class Player(models.Model):
         return '{:.2}'.format(self._get_games_count() / days_between_first_and_last.days)
 
     def is_active(self):
-        # ei-aktiivinen jos alle 30 pelia ja yli 100 pv tauko pelaamisesta
+        # ei-aktiivinen jos alle 30 pelia ja yli 100 pv tauko pelaamisesta.
         if timezone.now().date() - self.get_last_game_datetime().date() > timedelta(100):
             if self._get_games_count() < 30:
                 return False
