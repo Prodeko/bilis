@@ -14,129 +14,142 @@
 
 
 
+<div class="row">
 
-<div class="col-md-6">
-  <h1>{{ player.name }}</h1>
-  <div class="table-responsive">
-    <table class="table">
-        <tr>
-            <td>Fargo-rating</td><td>{{ player.fargo }}</td>
-        </tr>
-        <tr>
-            <td>Pelit</td><td>{{ player.games_count }}</td>
-        </tr>
-        <tr>
-            <td>Voittoprosentti</td><td>{{ player.get_victory_percent }}</td>
-        </tr>
-        <tr>
-            <td>Maksimipisteytys</td><td>{{ player.get_max_rating}}</td>
-        </tr>
-        <tr>
-            <td>Minimipisteytys</td><td>{{ player.get_min_rating}}</td>
-        </tr>
-        <tr>
-            <td>Pelit/vuorokausi</td><td>{{ player.games_per_day }}</td>
-        </tr>
-    </table>
-  </div>
+    <div class="col-md-6">
+      <h1>{{ player.name }}</h1>
+      <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <td>Fargo-rating</td><td>{{ player.fargo }}</td>
+            </tr>
+            <tr>
+                <td>Elo-rating</td><td>{{ player.elo }}</td>
+            </tr>
+            <tr>
+                <td>Pelit</td><td>{{ player.games_count }}</td>
+            </tr>
+            <tr>
+                <td>Voittoprosentti</td><td>{{ player.get_victory_percent }}</td>
+            </tr>
+            <tr>
+                <td>Maksimipisteytys</td><td>{{ player.get_max_rating}}</td>
+            </tr>
+            <tr>
+                <td>Minimipisteytys</td><td>{{ player.get_min_rating}}</td>
+            </tr>
+            <tr>
+                <td>Pelit/vuorokausi</td><td>{{ player.get_games_per_day }}</td>
+            </tr>
+        </table>
+      </div>
 
-  
-  <br>
+      
+      <br>
 
-  
-   
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<svg id="visualization" width="500" height="300"></svg>
+      
+       
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <svg id="visualization" width="500" height="300"></svg>
 
-<script>
-  $.getJSON("{%url 'rating_time_series' player=player.pk %}", function(data) {
-    visualize(data);
-  });
+    <script>
+      $.getJSON("{%url 'rating_time_series' player=player.pk %}", function(data) {
+        visualize(data);
+      });
 
 
-  function visualize(data) {
-    var vis = d3.select("#visualization"),
-      WIDTH = 500,
-      HEIGHT = 300,
-      LINE_COLOR = "{{ player.favorite_color_string }}",
-      LINE_STROKE_WIDTH = 1.5,
-      POINT_RADIUS = 4,
-      MARGINS = {
-        top: 20,
-        right: 20,
-        bottom: 20,
-        left: 50
-      },
-      xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function(d) {
-        return d.x;
-      }), d3.max(data, function(d) {
-        return d.x;
-      })]),
-      yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(data, function(d) {
-        return d.y;
-      }), d3.max(data, function(d) {
-        return d.y;
-      })]),
-      xAxis = d3.svg.axis()
-        .scale(xRange)
-        .tickSize(2)
-        .tickFormat(d3.format("d"))
-      yAxis = d3.svg.axis()
-        .scale(yRange)
-        .tickSize(2)
-        .tickFormat(d3.format("d"))
-        .orient('left')
+      function visualize(data) {
+        var vis = d3.select("#visualization"),
+          WIDTH = 500,
+          HEIGHT = 300,
+          LINE_COLOR = "{{ player.favorite_color_string }}",
+          LINE_STROKE_WIDTH = 1.5,
+          POINT_RADIUS = 4,
+          MARGINS = {
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 50
+          },
+          xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function(d) {
+            return d.x;
+          }), d3.max(data, function(d) {
+            return d.x;
+          })]),
+          yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(data, function(d) {
+            return d.y;
+          }), d3.max(data, function(d) {
+            return d.y;
+          })]),
+          xAxis = d3.svg.axis()
+            .scale(xRange)
+            .tickSize(2)
+            .tickFormat(d3.format("d"))
+          yAxis = d3.svg.axis()
+            .scale(yRange)
+            .tickSize(2)
+            .tickFormat(d3.format("d"))
+            .orient('left')
 
-      vis.append('svg:g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0, ' + (HEIGHT - MARGINS.bottom) +')')
-        .call(xAxis);
+          vis.append('svg:g')
+            .attr('class', 'x axis')
+            .attr('transform', 'translate(0, ' + (HEIGHT - MARGINS.bottom) +')')
+            .call(xAxis);
 
-      vis.append('svg:g')
-        .attr('class', 'y axis')
-        .attr('transform', 'translate(' + (MARGINS.left) + ',0)')
-        .call(yAxis);
+          vis.append('svg:g')
+            .attr('class', 'y axis')
+            .attr('transform', 'translate(' + (MARGINS.left) + ',0)')
+            .call(yAxis);
 
-      var line = d3.svg.line()
-        .x(function(d) {
-          return xRange(d.x);
-        })
-        .y(function(d) {
-          return yRange(d.y);
-        })
-        .interpolate('linear');
+          var line = d3.svg.line()
+            .x(function(d) {
+              return xRange(d.x);
+            })
+            .y(function(d) {
+              return yRange(d.y);
+            })
+            .interpolate('linear');
 
-      var points = vis.selectAll(".point")
-        .data(data)
-        .enter().append("svg:circle")
-          .attr("cx", function(d,i) { return xRange(d.x); })
-          .attr("cy", function(d,i) { return yRange(d.y); })
-          .attr("r", POINT_RADIUS)
-          .attr("stroke", LINE_COLOR)
-          .attr("fill", LINE_COLOR)
-            .append("svg:title")
-            .text(function(d) { return d.y; });
+          var points = vis.selectAll(".point")
+            .data(data)
+            .enter().append("svg:circle")
+              .attr("cx", function(d,i) { return xRange(d.x); })
+              .attr("cy", function(d,i) { return yRange(d.y); })
+              .attr("r", POINT_RADIUS)
+              .attr("stroke", LINE_COLOR)
+              .attr("fill", LINE_COLOR)
+                .append("svg:title")
+                .text(function(d) { return d.y; });
 
-      vis.append('svg:path')
-        .attr('d', line(data))
-        .attr('stroke', LINE_COLOR)
-        .attr('stroke-width', LINE_STROKE_WIDTH)
-        .attr('fill', 'none');
-  }
+          vis.append('svg:path')
+            .attr('d', line(data))
+            .attr('stroke', LINE_COLOR)
+            .attr('stroke-width', LINE_STROKE_WIDTH)
+            .attr('fill', 'none');
+      }
 
-</script>  
+    </script>
+
+    <br>
+
+      
+    </div>
+        
+    <div class="col-md-6">
+        <p>Vertaa pelaajaan:<p>
+          <select id="compare">
+            {% for p in players %}
+                {%if p.pk != player.pk%}
+                    <option value="{{p.pk}}">{{ p }}</option>
+                {% endif %}
+            {% endfor %}
+          </select>
+          <div id="comparison_area"></div>
+    </div>
 </div>
-    
-<div class="col-md-6">
-    <p>Vertaa pelaajaan:<p>
-      <select id="compare">
-        {% for p in players %}
-            {%if p.pk != player.pk%}
-                <option value="{{p.pk}}">{{ p }}</option>
-            {% endif %}
-        {% endfor %}
-      </select>
-      <div id="comparison_area"></div>
-  
-</div>
+
+
+
+
+
 {% endblock %}

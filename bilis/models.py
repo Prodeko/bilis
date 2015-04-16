@@ -49,11 +49,11 @@ class Player(models.Model):
     
     def get_min_rating(self):
         if self.won_games.exists():
-            won_games_min = self.won_games.all().aggregate(models.Max('winner_fargo'))['winner_fargo__max']
+            won_games_min = self.won_games.all().aggregate(models.Min('winner_fargo'))['winner_fargo__min']
         else:
             won_games_min = 400
         if self.lost_games.exists():
-            lost_games_min = self.lost_games.all().aggregate(models.Max('loser_fargo'))['loser_fargo__max']
+            lost_games_min = self.lost_games.all().aggregate(models.Min('loser_fargo'))['loser_fargo__min']
         else:
             lost_games_min = 400
         if won_games_min < lost_games_min:
@@ -61,34 +61,51 @@ class Player(models.Model):
         else:
             min_rating = lost_games_min
         return min(min_rating, 400)
-    
-    def games_per_day(self):
+        
+    def get_first_game_datetime(self):
         if self.won_games.exists():
-            won_games_first_date = self.won_games.all().aggregate(models.Min('datetime'))['datetime__min']
-            won_games_last_date = self.won_games.all().aggregate(models.Max('datetime'))['datetime__max']
+            won_games_first_datetime = self.won_games.all().aggregate(models.Min('datetime'))['datetime__min']
         else:
-            won_games_first_date = datetime.now()
-            won_games_last_date = datetime.now()
+            won_games_first_datetime = timezone.now()
         if self.lost_games.exists():
-            lost_games_first_date = self.lost_games.all().aggregate(models.Min('datetime'))['datetime__min']
-            lost_games_last_date = self.lost_games.all().aggregate(models.Max('datetime'))['datetime__max']
+            lost_games_first_datetime = self.lost_games.all().aggregate(models.Min('datetime'))['datetime__min']
         else:
-            lost_games_first_date = timezone.now()
-            lost_games_last_date = timezone.now()
-        if won_games_first_date < lost_games_first_date:
-            first_date = won_games_first_date
+            lost_games_first_datetime = timezone.now()
+        if won_games_first_datetime < lost_games_first_datetime:
+            first_datetime = won_games_first_datetime
         else:
-            first_date = lost_games_first_date
-        if won_games_last_date < lost_games_last_date:
-            last_date = won_games_last_date
-        else:
-            last_date = lost_games_last_date
-        days_between_first_and_last = last_date.date() - first_date.date() + timedelta(1)
-        return '{:.2}'.format(self._get_games_count() / days_between_first_and_last.days)
+            first_datetime = lost_games_first_datetime
+        return first_datetime
     
+    def get_last_game_datetime(self):
+        if self.won_games.exists():
+            won_games_last_datetime = self.won_games.all().aggregate(models.Max('datetime'))['datetime__max']
+        else:
+            won_games_last_datetime = timezone.now()
+        if self.lost_games.exists():
+            lost_games_last_datetime = self.lost_games.all().aggregate(models.Max('datetime'))['datetime__max']
+        else:
+            lost_games_last_datetime = timezone.now()
+        if won_games_last_datetime < lost_games_last_datetime:
+            last_datetime = won_games_last_datetime
+        else:
+            last_datetime = lost_games_last_datetime
+        return last_datetime
+    
+    def get_games_per_day(self):
+        days_between_first_and_last = self.get_last_game_datetime().date() - self.get_first_game_datetime().date() + timedelta(1)
+        return '{:.2}'.format(self._get_games_count() / days_between_first_and_last.days)
+
+    def is_active(self):
+        # ei-aktiivinen jos alle 30 pelia ja yli 100 pv tauko pelaamisesta
+        if timezone.now().date() - self.get_last_game_datetime().date() > timedelta(100):
+            if self._get_games_count() < 30:
+                return False
+        else:
+            return True
     
     def __str__(self):
-        return "#{id} {name}".format(id=self.pk, name= self.name)
+        return "#{id} {name} ({rating})".format(id=self.pk, name= self.name, rating=self.fargo)
     def get_rating(self, type):
         if type == "elo":
             return self.elo
