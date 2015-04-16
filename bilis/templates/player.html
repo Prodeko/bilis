@@ -138,6 +138,7 @@
     <div class="col-md-6">
         <p>Vertaa pelaajaan:<p>
           <select id="compare">
+            <option value="0"> </option>
             {% for p in players %}
                 {%if p.pk != player.pk%}
                     <option value="{{p.pk}}">{{ p }}</option>
