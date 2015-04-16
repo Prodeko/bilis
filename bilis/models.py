@@ -71,7 +71,7 @@ class Player(models.Model):
         else:
             min_rating = lost_games_min
         return min(min_rating, 400)
-        
+    
     def get_first_game_datetime(self):
         if self.won_games.exists():
             won_games_first_datetime = self.won_games.all().aggregate(models.Min('datetime'))['datetime__min']
