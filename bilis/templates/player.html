@@ -21,10 +21,13 @@
       <div class="table-responsive">
         <table class="table">
             <tr>
+                <td>Sijoitus</td><td>{{ player.get_ranking }}</td>
+            </tr>
+            <tr>
                 <td>Fargo-rating</td><td>{{ player.fargo }}</td>
             </tr>
             <tr>
-                <td>Elo-rating</td><td>{{ player.elo }}</td>
+                <td>(Elo-rating)</td><td>{{ player.elo }}</td>
             </tr>
             <tr>
                 <td>Pelit</td><td>{{ player.games_count }}</td>
@@ -40,6 +43,9 @@
             </tr>
             <tr>
                 <td>Pelit/vuorokausi</td><td>{{ player.get_games_per_day }}</td>
+            </tr>
+            <tr>
+                <td>Viimeisin peli</td><td>{{ player.get_last_game_date_str }}</td>
             </tr>
         </table>
       </div>

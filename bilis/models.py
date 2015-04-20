@@ -26,6 +26,16 @@ class Player(models.Model):
     def _get_games_count(self):
         return self.won_games.count() + self.lost_games.count()
     games_count = property(_get_games_count)
+    
+    def get_ranking(self):
+        players = Player.objects.order_by('-fargo')
+        ranking = 0
+        for p in players:
+            ranking += 1
+            if p.pk == self.pk:
+                break
+        return ranking
+    
     def get_victory_percent(self):
         if self._get_games_count() > 0:
             return '{:.2%}'.format(self.won_games.count() / self._get_games_count())
@@ -96,6 +106,17 @@ class Player(models.Model):
         days_between_first_and_last = self.get_last_game_datetime().date() - self.get_first_game_datetime().date() + timedelta(1)
         return '{:.2}'.format(self._get_games_count() / days_between_first_and_last.days)
 
+    def get_last_game_date_str(self):
+        if len(self._get_games()) > 0:
+            last_datetime = self.get_last_game_datetime()
+            if last_datetime.date() == timezone.now().date():
+                last_time = last_datetime.time()
+            else:
+                last_time = last_datetime.date()
+        else:
+            last_time = '-'
+        return str(last_time)
+    
     def is_active(self):
         # ei-aktiivinen jos alle 30 pelia ja yli 100 pv tauko pelaamisesta.
         if timezone.now().date() - self.get_last_game_datetime().date() > timedelta(100):
