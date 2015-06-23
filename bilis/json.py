@@ -41,6 +41,10 @@ def games(request):
                         indent=4, separators=(',', ': ')), content_type='application/json')
 
 def players(request):
+    if request.session.get('rating_type', 'elo') == 'fargo':
+        rating_type = 'fargo'
+    else:
+        rating_type = 'elo'
     #sijoitus, nimi, pisteet, pelatut, voitetut, hävityt
     offset = int(request.GET.get('offset'))
     limit = int(request.GET.get('limit'))
@@ -49,15 +53,17 @@ def players(request):
     order = request.GET.get('order')
     if(sort=='name'):
         sort='last_name'
+    if(sort=='rating'):
+        sort=rating_type
     if(sort is None):
         sort = '-fargo'
     else:
         sort = MySQLdb.escape_string(sort)
     if(search is None):
-        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.{}>x.{}) as position from bilis_player as x order by {} {}".format("fargo", "fargo", sort, order))[offset:offset+limit] #TODO: fiksaa
+        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.{}>x.{}) as position from bilis_player as x order by {} {}".format(rating_type, rating_type, sort, order))[offset:offset+limit] #TODO: fiksaa
     else:
         search = MySQLdb.escape_string(search)
-        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.{}>x.{}) as position from bilis_player as x where first_name like %s or last_name like %s order by {} {}".format("fargo", "fargo", sort, order), ['%'+search+'%', '%'+search+'%'])[offset:offset+limit]
+        players = Player.objects.raw("select x.id, (select count(*)+1 from bilis_player as t where t.{}>x.{}) as position from bilis_player as x where first_name like %s or last_name like %s order by {} {}".format(rating_type, rating_type, sort, order), ['%'+search+'%', '%'+search+'%'])[offset:offset+limit]
 
     struct = {}
     rows = []
@@ -65,7 +71,7 @@ def players(request):
         item = {}
         item['position'] = player.position
         item['name'] = "<a href='/player/" + str(player.pk) + "/' >" + escape(player.name) + "</a>"
-        item['rating'] = str(player.get_rating("fargo")) #TODO: ei kovakoodaa
+        item['rating'] = str(player.get_rating(rating_type)) #TODO: ei kovakoodaa
         item['games'] = len(player.games)
         item['won_games'] = player.won_games.count()
         item['lost_games'] = player.lost_games.count()
@@ -78,17 +84,21 @@ def players(request):
 
 
 def rating_time_series(request, player):
+    if request.session.get('rating_type', 'elo') == 'fargo':
+        rating_type = 'fargo'
+    else:
+        rating_type = 'elo'
     player = get_object_or_404(Player, pk=player)
-    data = cache.get('fargo_series_' + str(player.pk))
+    data = cache.get('{}_series_'.format(rating_type) + str(player.pk))
     if data is None:
       data = []
       for i, game in enumerate(reversed(player.games)): #this is a bit hacky, should rethink the API
           point = {}
           point['x'] = i
-          point['y'] = float(game.get_winner_rating("fargo")) if game.winner==player else float(game.get_loser_rating("fargo"))
+          point['y'] = float(game.get_winner_rating(rating_type)) if game.winner==player else float(game.get_loser_rating(rating_type))
           data.append(point)
-      data.append({'x': len(player.games), 'y': float(player.get_rating("fargo"))})
-      cache.set('fargo_series_' + str(player.pk), data, timeout=None)
+      data.append({'x': len(player.games), 'y': float(player.get_rating(rating_type))})
+      cache.set('{}_series_'.format(rating_type) + str(player.pk), data, timeout=None)
     return HttpResponse(json.dumps(data, indent=4, sort_keys=True, separators=(',', ': ')), content_type='application/json')
 
     

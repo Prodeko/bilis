@@ -11,8 +11,12 @@ from bilis import utils
 import json
 
 def index(request):
+    if request.session.get('rating_type', 'elo') == 'fargo':
+        rating_type = 'fargo'
+    else:
+        rating_type = 'elo'
     form = ResultForm()
-    players = Player.objects.all().order_by('-fargo')[:20] #TODO: fix
+    players = Player.objects.all().order_by('-{}'.format(rating_type))[:20] #TODO: fix
     latest_games = Game.objects.filter(deleted=False).order_by('-datetime')[:20]
     if Game.objects.count() > 0:
         allow_delete = not Game.objects.latest('datetime').deleted
@@ -22,7 +26,8 @@ def index(request):
                 'form': form,
                 'players': players,
                 'latest_games' : latest_games,
-                'allow_delete' : allow_delete
+                'allow_delete' : allow_delete,
+                'rating_type': rating_type,
         }, context_instance=RequestContext(request))
 
 def add_result(request):
@@ -59,6 +64,10 @@ def delete_last_result(request):
     return redirect('bilis.views.index')
 
 def new_player(request):
+    if request.session.get('rating_type', 'elo') == 'fargo':
+        rating_type = 'fargo'
+    else:
+        rating_type = 'elo'
     if request.method == 'POST':
         form = PlayerForm(request.POST)
         if form.is_valid():
@@ -70,6 +79,7 @@ def new_player(request):
         form = PlayerForm()
     return render_to_response('new_player.html',{
                 'form': form,
+                'rating_type': rating_type,
         }, context_instance=RequestContext(request))
 
 def delete_player(request, player):
@@ -79,17 +89,27 @@ def delete_player(request, player):
     return redirect('bilis.views.index')
 
 def players(request):
-    players = Player.objects.all().order_by('-fargo')  #TODO: korjaa vaihtoehto
+    if request.session.get('rating_type', 'elo') == 'fargo':
+        rating_type = 'fargo'
+    else:
+        rating_type = 'elo'
+    players = Player.objects.all().order_by('-{}'.format(rating_type))  #TODO: korjaa vaihtoehto
     return render_to_response('players.html',{
-                'players': players
+                'players': players,
+                'rating_type': rating_type
         }, context_instance=RequestContext(request))
 
 def player(request, player):
+    if request.session.get('rating_type', 'elo') == 'fargo':
+        rating_type = 'fargo'
+    else:
+        rating_type = 'elo'
     player = get_object_or_404(Player, pk=player)
-    players = Player.objects.all().order_by('-fargo')  #TODO: korjaa vaihtoehto
+    players = Player.objects.all().order_by('-{}'.format(rating_type))  #TODO: korjaa vaihtoehto
     return render_to_response('player.html',{
                 'player': player,
-                'players': players
+                'players': players,
+                'rating_type': rating_type
         }, context_instance=RequestContext(request))
 
 
@@ -106,9 +126,14 @@ def comparison(request, player1, player2):
         }, context_instance=RequestContext(request))
         
 def games(request):
+    if request.session.get('rating_type', 'elo') == 'fargo':
+        rating_type = 'fargo'
+    else:
+        rating_type = 'elo'
     games = Game.objects.filter(deleted=False).order_by('-datetime')
     return render_to_response('games.html', {
-                'games': games
+                'games': games,
+                'rating_type': rating_type,
     }, context_instance=RequestContext(request))
 
 def ajax_player_network(request):
@@ -167,3 +192,7 @@ def chart(request, player):
     return render_to_response('rating_chart.html', {
             'player': player
 }, context_instance=RequestContext(request))
+
+def set_rating_type(request, rating_type):
+    request.session['rating_type'] = rating_type
+    return redirect('bilis.views.index')

@@ -8,6 +8,19 @@
       {% load extras %}
       {% compressed_css 'kilke' %}
       {% compressed_js 'kilke' %}
+      <script>
+          function setElo() {
+              $.ajax({ 
+                 url: "{% url 'set_rating_type' 'elo' %}"
+              }).done(function() { location.reload(); })
+          }
+          function setFargo() {
+              $.ajax({ 
+                 url: "{% url 'set_rating_type' 'fargo' %}"
+              }).done(function() { location.reload(); })
+          }
+      </script>
+
       <title>{% block title %}Biliskilke{% endblock %}</title>
   </head>
   <body>
@@ -28,6 +41,17 @@
             <li><a href="{% url 'new' %}">Uusi pelaaja</a></li>
             <li><a href="{% url 'players' %}">Pelaajat</a></li>
             <li><a href="{% url 'games' %}">Kaikki pelit</a></li>
+            <li><a>
+              <div class="btn-group" data-toggle="buttons">
+              <label class="btn btn-primary {% if rating_type == 'elo' %}active{% endif %}">
+                                <input type="radio" name="options" id="elo_button" autocomplete="off" onChange="setElo()">Elo
+              </label>
+              <label class="btn btn-primary {% if rating_type == 'fargo' %}active{% endif %}">
+                <input type="radio" name="options" id="fargo_button" autocomplete="off" onChange="setFargo()">Fargo
+              </label>
+              </div>
+            </a>
+            </li>
           </ul>
         </div>
       </div>
