@@ -27,6 +27,9 @@ class Player(models.Model):
         return self.won_games.count() + self.lost_games.count()
     games_count = property(_get_games_count)
     
+    '''
+    ei ehka kovin hyva tapa toteuttaa, koska joutuu kaymaan for-loopilla kaikki pelaajat lapi
+    
     def get_ranking(self):
         players = Player.objects.order_by('-fargo')
         ranking = 0
@@ -35,6 +38,7 @@ class Player(models.Model):
             if p.pk == self.pk:
                 break
         return ranking
+    '''
     
     def get_victory_percent(self):
         if self._get_games_count() > 0:
