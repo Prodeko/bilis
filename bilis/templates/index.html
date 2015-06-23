@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 
 {% block body %}
@@ -127,7 +128,7 @@
             <tr>
               <td>{{ game.datetime | date:"d.m. H:i"  }}</td>
               <td><a href="{% url 'player' game.winner.pk %}">{{ game.winner.name }}</a></td>
-              <td><a href="{% url 'player' game.loser.pk %}">{{ game.loser.name }}</a> {% if game.under_table %}<img src="/">{% endif %}</td>
+              <td><a href="{% url 'player' game.loser.pk %}">{{ game.loser.name }}</a> {% if game.under_table %}<img src="{% static 'img/under_table.png' %}">{% endif %}</td>
             </tr>
             {% endfor %}
           </tbody>
