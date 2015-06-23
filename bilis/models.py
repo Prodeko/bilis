@@ -153,15 +153,15 @@ class Player(models.Model):
 
     def update_rating_fargo(self, opponent_rating, opponent_games, result):
 
-        if (len(self.games)>50): 
-            self_robust = math.log(len(self.games),1.01029)-332.268
+        if (len(self.games) > 20): 
+            self_robust = math.log(len(self.games), 1.14163) - 2.61648
         else:
-            self_robust = 50
+            self_robust = 20
         
-        if (opponent_games>50): 
-            opponent_robust = math.log(opponent_games,1.01029)-332.268
+        if (opponent_games > 20): 
+            opponent_robust = math.log(opponent_games, 1.14163) - 2.61648
         else:
-            opponent_robust = 50
+            opponent_robust = 20
 
 
         if (result>0):
@@ -215,3 +215,27 @@ class Game(models.Model):
                 self.datetime = datetime.now()
         
         super(Game, self).save(*args, **kwargs)
+        
+    def replay(self, *args, **kwargs):
+        winner_elo = self.winner.elo
+        loser_elo = self.loser.elo
+        winner_fargo = self.winner.fargo
+        loser_fargo = self.loser.fargo
+        self.winner_elo = self.winner.elo
+        self.loser_elo = self.loser.elo
+        self.winner_fargo = self.winner.fargo
+        self.loser_fargo = self.loser.fargo
+        self.winner.update_rating(loser_elo, 1)
+        self.loser.update_rating(winner_elo, 0)
+        self.winner.update_rating_fargo(loser_fargo, self.loser.games_count, 1)
+        self.loser.update_rating_fargo(winner_fargo, self.winner.games_count, 0)
+        self.save()
+        
+def update_all_ratings():
+    for player in Player.objects.all():
+        player.elo = 100
+        player.fargo = 400
+        player.save()
+        
+    for game in Game.objects.all():
+        game.replay()
