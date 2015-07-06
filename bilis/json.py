@@ -116,18 +116,18 @@ def personal_games(request, player):
     struct = {}
     rows = []
     number = player._get_games_count()+1
+    rating=float(player.get_rating("fargo"))
     for game in games:
         number-=1
-        #if(game.winner=player):
-        #fargo_player = game.winner.fargo
         item = {}
         item['datetime'] = game.datetime.strftime("%d.%m.%y %H:%M")
         item['winner'] = "<a href='/player/" + str(game.winner.pk) + "/' title='" + escape(game.winner_fargo) +"'>" + escape(game.winner.name) + "</a>" + (" <img src='{{ static  }}'>" if game.under_table else "")
         item['loser'] =  "<a href='/player/" + str(game.loser.pk) + "/' title='" + escape(game.loser_fargo) +"'>" + escape(game.loser.name) + "</a>"
-        item['rating'] =  float(game.get_winner_rating("fargo")) if game.winner==player else float(game.get_loser_rating("fargo"))
+        item['rating'] = rating 
         item['ranking'] =  ""
         item['number'] =  number
         rows.append(item)
+        rating = float(game.get_winner_rating("fargo")) if game.winner==player else float(game.get_loser_rating("fargo"))
     total = Game.objects.filter(Q(winner=player) | Q(loser=player)).count()
     struct['total'] = total
     struct['rows'] = rows
