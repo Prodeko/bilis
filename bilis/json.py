@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.html import escape
 from django.views.decorators.cache import cache_page
 from bilis.models import Player, Game
+from django.db.models import Q
 
 def games(request):
     offset = int(request.GET.get('offset'))
@@ -38,8 +39,8 @@ def games(request):
     struct['total'] = total
     struct['rows'] = rows
     return HttpResponse(json.dumps(struct, sort_keys=True,
-                        indent=4, separators=(',', ': ')), content_type='application/json')
-
+                        indent=4, separators=(',', ': ')), content_type='application/json')                        
+                        
 def players(request):
     #sijoitus, nimi, pisteet, pelatut, voitetut, hävityt
     offset = int(request.GET.get('offset'))
@@ -93,3 +94,41 @@ def rating_time_series(request, player):
 
     
     
+def personal_games(request, player):
+    player = get_object_or_404(Player, pk=player)
+    offset = int(request.GET.get('offset'))
+    limit = int(request.GET.get('limit'))
+    search = request.GET.get('search')
+    sort = request.GET.get('sort')
+    order = request.GET.get('order')
+    if(sort is None):
+        sort = '-datetime'
+    elif(order=='asc'):
+        sort = '-'+sort
+    if(search is None):
+            games = Game.objects.filter(Q(winner=player) | Q(loser=player)).order_by(sort)[offset:offset+limit]
+    else:
+        won_games = Game.objects.filter(Q(winner=player) | Q(loser=player)).filter(winner__first_name__icontains=search) | Game.objects.filter(Q(winner=player) | Q(loser=player)).filter(winner__last_name__icontains=search)
+        lost_games = Game.objects.filter(Q(winner=player) | Q(loser=player)).filter(loser__first_name__icontains=search) | Game.objects.filter(Q(winner=player) | Q(loser=player)).filter(loser__last_name__icontains=search)
+        games = (won_games | lost_games).order_by(sort)[offset:offset+limit]
+    if(search is not None):
+        games = games.filter()
+    struct = {}
+    rows = []
+    for game in games:
+        #if(game.winner=player):
+        #fargo_player = game.winner.fargo
+        item = {}
+        item['datetime'] = game.datetime.strftime("%d.%m.%y %H:%M")
+        item['winner'] = "<a href='/player/" + str(game.winner.pk) + "/' title='" + escape(game.winner_fargo) +"'>" + escape(game.winner.name) + "</a>" + (" <img src='{{ static  }}'>" if game.under_table else "")
+        item['loser'] =  "<a href='/player/" + str(game.loser.pk) + "/' title='" + escape(game.loser_fargo) +"'>" + escape(game.loser.name) + "</a>"
+        item['rating'] =  ""
+        item['ranking'] =  ""
+        rows.append(item)
+    total = Game.objects.filter(Q(winner=player) | Q(loser=player)).count()
+    struct['total'] = total
+    struct['rows'] = rows
+    return HttpResponse(json.dumps(struct, sort_keys=True,
+                        indent=4, separators=(',', ': ')), content_type='application/json')     
+    
+  

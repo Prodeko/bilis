@@ -13,7 +13,6 @@
 </script>
 
 
-
 <div class="row">
 
     <div class="col-md-6">
@@ -21,10 +20,7 @@
       <div class="table-responsive">
         <table class="table">
             <tr>
-                <td>Fargo-rating</td><td>{{ player.fargo }}</td>
-            </tr>
-            <tr>
-                <td>(Elo-rating)</td><td>{{ player.elo }}</td>
+                <td>Pisteet</td><td>{{ player.fargo }}</td>
             </tr>
             <tr>
                 <td>Pelit</td><td>{{ player.games_count }}</td>
@@ -41,16 +37,13 @@
             <tr>
                 <td>Pelit/vuorokausi</td><td>{{ player.get_games_per_day }}</td>
             </tr>
-            <tr>
-                <td>Viimeisin peli</td><td>{{ player.get_last_game_date_str }}</td>
-            </tr>
         </table>
       </div>
 
       
       <br>
 
-      
+      <h3>Pisteet/pelit</h3>
        
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <svg id="visualization" width="500" height="300"></svg>
@@ -139,7 +132,7 @@
     </div>
         
     <div class="col-md-6">
-        <p>Vertaa pelaajaan:<p>
+        <p>Vertaa pelaajaan:</p>
           <select id="compare">
             <option value="0"> </option>
             {% for p in players %}
@@ -150,6 +143,26 @@
           </select>
           <div id="comparison_area"></div>
     </div>
+</div>
+
+<div class="row">
+    <div class="col col-md-12">
+         <br>
+         <h3>Pelihistoria</h3>
+         <table id="personal-game-table" class="table table-striped" data-toggle="table" data-url="{%url 'ajax_personal_games' player=player.pk %}" data-side-pagination="server" data-pagination="true" data-search="true">
+            <thead>
+              <tr>
+                <th data-field="datetime" data-sortable="true">Aika</th>
+                <th data-field="winner" data-sortable="true">Voittaja</th>
+                <th data-field="loser" data-sortable="true">Häviäjä</th>
+                <!--
+                <th data-field="rating" data-sortable="true">Pisteet</th>
+                <th data-field="ranking" data-sortable="true">Sijoitus</th>
+                -->
+              </tr>
+            </thead>
+         </table>
+     </div>
 </div>
 
 

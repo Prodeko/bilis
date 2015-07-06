@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+﻿from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
 from django.core.cache import cache
 from django.db import models
@@ -27,9 +27,6 @@ class Player(models.Model):
         return self.won_games.count() + self.lost_games.count()
     games_count = property(_get_games_count)
     
-    '''
-    ei ehka kovin hyva tapa toteuttaa, koska joutuu kaymaan for-loopilla kaikki pelaajat lapi
-    
     def get_ranking(self):
         players = Player.objects.order_by('-fargo')
         ranking = 0
@@ -38,7 +35,6 @@ class Player(models.Model):
             if p.pk == self.pk:
                 break
         return ranking
-    '''
     
     def get_victory_percent(self):
         if self._get_games_count() > 0:
@@ -230,12 +226,14 @@ class Game(models.Model):
         self.winner.update_rating_fargo(loser_fargo, self.loser.games_count, 1)
         self.loser.update_rating_fargo(winner_fargo, self.winner.games_count, 0)
         self.save()
-        
+
 def update_all_ratings():
     for player in Player.objects.all():
         player.elo = 100
         player.fargo = 400
         player.save()
-        
+    
     for game in Game.objects.all():
-        game.replay()
+        game.replay() 
+
+    
