@@ -117,6 +117,13 @@ class Player(models.Model):
             last_time = '-'
         return str(last_time)
     
+    
+    def get_won_under_table_count(self):
+        return Game.objects.filter(winner=self).filter(under_table=True).count()
+        
+    def get_lost_under_table_count(self):
+        return Game.objects.filter(loser=self).filter(under_table=True).count()
+    
     def is_active(self):
         # ei-aktiivinen jos alle 30 pelia ja yli 100 pv tauko pelaamisesta.
         if timezone.now().date() - self.get_last_game_datetime().date() > timedelta(100):
@@ -127,11 +134,13 @@ class Player(models.Model):
     
     def __str__(self):
         return "#{id} {name} ({rating})".format(id=self.pk, name= self.name, rating=self.fargo)
+    
     def get_rating(self, type):
         if type == "elo":
             return self.elo
         else:
             return self.fargo
+    
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.elo = 100
@@ -226,7 +235,7 @@ class Game(models.Model):
         self.winner.update_rating_fargo(loser_fargo, self.loser.games_count, 1)
         self.loser.update_rating_fargo(winner_fargo, self.winner.games_count, 0)
         self.save()
-
+        
 def update_all_ratings():
     for player in Player.objects.all():
         player.elo = 100
@@ -235,5 +244,3 @@ def update_all_ratings():
     
     for game in Game.objects.all():
         game.replay() 
-
-    
