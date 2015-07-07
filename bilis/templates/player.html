@@ -40,12 +40,6 @@
             <tr>
                 <td>Pelit/vuorokausi</td><td>{{ player.get_games_per_day }}</td>
             </tr>
-            <tr>
-                <td>Voitot pöydän alle</td><td>{{ player.get_won_under_table_count }}</td><td></td>
-            </tr>
-            <tr>
-                <td>Häviöt pöydän alle</td><td>{{ player.get_lost_under_table_count }}</td><td></td>
-            </tr>
         </table>
       </div>
 
@@ -161,7 +155,6 @@
          <table id="personal-game-table" class="table table-striped" data-toggle="table" data-url="{%url 'ajax_personal_games' player=player.pk %}" data-side-pagination="server" data-pagination="true" data-search="true">
             <thead>
               <tr>
-                <th data-field="number" data-sortable="true">Peli</th>
                 <th data-field="datetime" data-sortable="true">Aika</th>
                 <th data-field="winner" data-sortable="true">Voittaja</th>
                 <th data-field="loser" data-sortable="true">Häviäjä</th>

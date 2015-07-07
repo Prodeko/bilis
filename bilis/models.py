@@ -117,13 +117,6 @@ class Player(models.Model):
             last_time = '-'
         return str(last_time)
     
-    
-    def get_won_under_table_count(self):
-        return Game.objects.filter(winner=self).filter(under_table=True).count()
-        
-    def get_lost_under_table_count(self):
-        return Game.objects.filter(loser=self).filter(under_table=True).count()
-    
     def is_active(self):
         # ei-aktiivinen jos alle 30 pelia ja yli 100 pv tauko pelaamisesta.
         if timezone.now().date() - self.get_last_game_datetime().date() > timedelta(100):
