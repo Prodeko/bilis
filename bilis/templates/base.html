@@ -45,11 +45,30 @@
           <p>Ime parsaa</p>
         {% endblock %}
       </div>
+      
+        <div class="modal fade" id="fargoInfo" tabindex="-1" role="dialog" aria-labelledby="fargoInfo" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Pisteytys</h4>
+                    <p>Pelien pisteytys lasketaan <a href="http://www.fargobilliards.com/pool-tournaments/fargo-ratings/" target="_blank">Fargo</a>-algoritmilla,  
+                        jonka perusidea on mahdollistaa hyvien ja huonojen pelaajien kilpailu samassa sarjassa. Häviäjältä voittajalle siirtyvä pistemäärä lasketaan kaavalla,
+                        joka huomioi pelaajien välisen piste-eron ja kokemuksen. Mitä suurempi piste-ero, sitä enemmän pisteitä siirtyy.
+                        Pelaajien kokemus kuitenkin pienentää vaikutusta. Mitä enemmän pelattuja pelejä, sitä vähemmän voitosta saa tai häviöstä menettää pisteitä.
+                        Kokemuksen vaikutus muuttuu logaritmisesti, eli sitä hitaammin, mitä enemmän pelejä on takana. Jokainen uusi pelaaja aloittaa pistemäärällä 400, ja
+                        kaikkien pelaajien pisteiden summa on aina 400 x pelaajien määrä.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+      
     </div>
     
     <div class="footer navbar-bottom">
       <div class="container">
-        <p class="text-muted">Viimeisin päivitys: 13.7.2015 - webmaster@prodeko.org</p>
+        <p class="text-muted">Viimeisin päivitys: 19.7.2015 - webmaster@prodeko.org</p>
       </div>
     </div>
     
