@@ -18,7 +18,7 @@ import sys
 
 root = os.path.join(os.path.dirname(__file__), '..')
 sys.path.insert(0, root)
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "biliskilke.settings")
+os.environ["DJANGO_SETTINGS_MODULE"] = "biliskilke.settings"
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

@@ -2,7 +2,6 @@
 import os
 import sys
 
-#import pymysql as a pretend MySQLdb
 import pymysql
 pymysql.install_as_MySQLdb()
 

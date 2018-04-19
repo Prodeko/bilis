@@ -1,12 +1,25 @@
+# Python
 *.pyc
+/pyvenv.cfg
+/venv/
+
+# sqlite3
 *.db
+
+# macOS only
+.DS_STORE
+
+# vim
 *.swp
+
+# Miscellaneous
 /.project
 /.pydevproject
 /.settings/
 /.vagrant/
 /npm-debug.log
+/compiled/
 /bilis/compiled/
-*.csv
 /bilis/static/uploads/
-.DS_Store
+*.csv
+
