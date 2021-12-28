@@ -1,12 +1,14 @@
 *.pyc
 *.db
 *.swp
+variables.txt
+venv
+biliskilke/static
 /.project
 /.pydevproject
 /.settings/
 /.vagrant/
 /npm-debug.log
-/bilis/compiled/
 *.csv
 /bilis/static/uploads/
 .DS_Store

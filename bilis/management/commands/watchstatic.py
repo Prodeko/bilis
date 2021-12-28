@@ -8,7 +8,7 @@ import time
 
 
 class Command(NoArgsCommand):
-    help = 'Watches the static folder for changes, and runs the collectstatic-command if something is changed'
+    help = "Watches the static folder for changes, and runs the collectstatic-command if something is changed"
 
     def handle_noargs(self, **options):
         def get_time(filename):
@@ -21,7 +21,7 @@ class Command(NoArgsCommand):
             files_dict = {}
             for (dirpath, dirname, filenames) in os.walk(directory):
                 for name in filenames:
-                    files.append(dirpath + '/' + name)
+                    files.append(dirpath + "/" + name)
             for filename in files:
                 files_dict[filename] = get_time(filename)
             return files_dict
@@ -29,7 +29,7 @@ class Command(NoArgsCommand):
         def read_all():
             all_files = {}
             for key, sets in settings.WATCH_STATIC_FOLDERS.items():
-                folder_dict = files_and_times(sets['folder'])
+                folder_dict = files_and_times(sets["folder"])
                 all_files[key] = folder_dict
             return all_files
 
@@ -37,23 +37,23 @@ class Command(NoArgsCommand):
             # Read new files and their modification times
             new_files = read_all()
             if new_files != old_files:
-                print('Files changed!')
+                print("Files changed!")
                 try:
-                    call_command('collectstatic', interactive=False)
+                    call_command("collectstatic", interactive=False)
                     # Delete the useless files created by django-pipeline
                     # See: https://github.com/cyberdelia/django-pipeline/issues/202
                     for key, sets in settings.WATCH_STATIC_FOLDERS.items():
-                        for filename in sets['delete']:
-                            filepath = sets['folder'] + '/' + filename
+                        for filename in sets["delete"]:
+                            filepath = sets["folder"] + "/" + filename
                             os.remove(filepath)
-                            print('Deleted ' + filepath)
+                            print("Deleted " + filepath)
                 except CompilerError:
-                    print('Failed to compile!')
+                    print("Failed to compile!")
                     # Just try again when the code is changed next time
                     pass
                 old_files = read_all()
             else:
-                print('Files not changed!')
+                print("Files not changed!")
             sc.enter(settings.WATCH_INTERVAL, 1, files_changed, (sc, old_files))
 
         s = sched.scheduler(time.time, time.sleep)
