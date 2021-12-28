@@ -5,7 +5,6 @@ services:
     build:
       context: .
       target: prod
-    container_name: prodeko_org
     volumes:
       - .:/app:consistent
     ports:
