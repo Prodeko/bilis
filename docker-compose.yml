@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:12
+    container_name: postgres
+    environment:
+      POSTGRES_DB: biliskilke
+      POSTGRES_USER: biliskilke
+      POSTGRES_PASSWORD: secret
+
+  biliskilke:
+    build:
+      context: .
+      target: dev
+    entrypoint: /app/docker-entrypoint.sh
+    command: python3 manage.py runserver 0.0.0.0:7100
+    volumes:
+      - .:/app:consistent
+    ports:
+      - '7100:7100'
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://biliskilke:secret@postgres/biliskilke

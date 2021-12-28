@@ -1,21 +1,20 @@
-﻿{% load staticfiles %}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fi">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
       <script src="https://code.jquery.com/jquery.js"></script>
-      {% load compressed %}
+      {% load pipeline %}
       {% load extras %}
-      {% compressed_css 'kilke' %}
-      {% compressed_js 'kilke' %}
+      {% javascript 'main' %}
+      {% stylesheet 'main' %}
       <script>
           function setElo() {
-              $.ajax({ 
+              $.ajax({
                  url: "{% url 'set_rating_type' 'elo' %}"
               }).done(function() { location.reload(); })
           }
           function setFargo() {
-              $.ajax({ 
+              $.ajax({
                  url: "{% url 'set_rating_type' 'fargo' %}"
               }).done(function() { location.reload(); })
           }

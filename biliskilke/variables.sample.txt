@@ -1,0 +1,11 @@
+# Change variables, copy and rename this file to variables.txt
+[DJANGO]
+SECRET = longrandomstring
+ENV	   = dev
+
+[DB]
+HOST = postgres
+PORT = 5432
+NAME_DEFAULT = bilikilke
+USER = bilikilke
+PASSWORD = secret

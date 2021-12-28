@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  biliskilke:
+    build:
+      context: .
+      target: prod
+    container_name: prodeko_org
+    volumes:
+      - .:/app:consistent
+    ports:
+      - '7100:7100'
+
+networks:
+  default:
+    external:
+      name: prodeko-docker-net
