@@ -5,6 +5,7 @@ services:
     build:
       context: .
       target: prod
+    container_name: bilis
     volumes:
       - .:/app:consistent
     restart: unless-stopped
