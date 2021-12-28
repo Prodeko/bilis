@@ -7,6 +7,8 @@ services:
       target: prod
     volumes:
       - .:/app:consistent
+    restart: unless-stopped
+    command: gunicorn --bind 0.0.0.0:7100 --workers 5 --threads 4 biliskilke.wsgi:application
     ports:
       - '7100:7100'
 
