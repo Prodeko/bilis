@@ -12,24 +12,24 @@ urlpatterns = [
     path("add/", views.add_result, name="add"),
     path("remove/", views.delete_last_result, name="remove"),
     path("delete/<player>", views.delete_player, name="delete"),
-    path("set_rating_type/<rating_type>", views.set_rating_type, name="set_rating_type"),
+    path("set_rating_type/<rating_type>/", views.set_rating_type, name="set_rating_type"),
     path("players/", views.players, name="players"),
-    path("player/<player>", views.player, name="player"),
+    path("player/<player>/", views.player, name="player"),
     path(
-        "comparison/<player1>/<player2>",
+        "player/comparison/<player1>/<player2>/",
         views.comparison,
         name="comparison",
     ),
-    path("ajax/player_network", views.ajax_player_network, name="player_network"),
-    path("upload", views.upload_image, name="upload"),
-    path("games", views.games, name="games"),
+    path("ajax/player_network/", views.ajax_player_network, name="player_network"),
+    path("upload/", views.upload_image, name="upload"),
+    path("games/", views.games, name="games"),
     path(
-        "chart/<player>", views.chart, name="chart"
+        "chart/<player>/", views.chart, name="chart"
     ),  # TODO: remove dummy route and view
-    path("ajax/games", json.games, name="ajax_games"),
-    path("ajax/players", json.players, name="ajax_players"),
+    path("ajax/games/", json.games, name="ajax_games"),
+    path("ajax/players/", json.players, name="ajax_players"),
     path(
-        "ajax/rating_time_series/<player>",
+        "ajax/rating_time_series/<player>/",
         json.rating_time_series,
         name="rating_time_series",
     ),
