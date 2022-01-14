@@ -6,6 +6,6 @@ ENV	   = dev
 [DB]
 HOST = postgres
 PORT = 5432
-NAME_DEFAULT = bilikilke
-USER = bilikilke
+NAME_DEFAULT = biliskilke
+USER = biliskilke
 PASSWORD = secret
