@@ -33,7 +33,7 @@ DB_PSWD = config["DB"]["PASSWORD"]
 DEBUG = True 
 #if ENV == "dev" else False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "bilis.prodeko.org"]
 
 
 # Application definition
