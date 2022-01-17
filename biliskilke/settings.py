@@ -30,7 +30,7 @@ DB_USER = config["DB"]["USER"]
 DB_PSWD = config["DB"]["PASSWORD"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 #if ENV == "dev" else False
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "bilis.prodeko.org"]
